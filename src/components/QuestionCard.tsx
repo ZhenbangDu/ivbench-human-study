@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { PhysicalChoice } from '../study/session';
 
 type QuestionCardProps = {
@@ -17,12 +18,16 @@ export function QuestionCard({
   value,
   onChange,
 }: QuestionCardProps) {
+  const headingId = useId();
+
   return (
-    <fieldset
+    <section
+      aria-labelledby={headingId}
       className="question-card"
+      role="group"
       style={{ display: 'flex', flexDirection: 'column' }}
     >
-      <legend>{heading}</legend>
+      <h2 id={headingId}>{heading}</h2>
       <p>{hint}</p>
       <div className="choice-row" style={{ marginTop: 'auto' }}>
         {choices.map((choice, index) => (
@@ -37,6 +42,6 @@ export function QuestionCard({
           </button>
         ))}
       </div>
-    </fieldset>
+    </section>
   );
 }

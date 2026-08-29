@@ -1,10 +1,24 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { QuestionCard } from './QuestionCard';
 
 const labels = ['Left', 'About the same', 'Right'] as const;
 
 describe('QuestionCard alignment', () => {
+  it('uses a standard flex group instead of fieldset legend layout', () => {
+    render(
+      <QuestionCard
+        heading="Short heading"
+        hint="Short hint"
+        labels={labels}
+        value={null}
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('group', { name: 'Short heading' }).tagName).toBe('SECTION');
+  });
+
   it('bottom-anchors every option row when question copy has different heights', () => {
     const { container } = render(
       <section className="questions">
