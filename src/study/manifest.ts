@@ -39,7 +39,7 @@ function groundTruthFor(index: number): GroundTruthConfig {
         text: 'Supporting text',
         timeStart: 1,
         timeEnd: 3,
-        region: { x: textX, y: 0.47, width: 0.3, height: 0.14 },
+        region: { x: textX, y: 0.47, width: 0.36, height: 0.15 },
       },
       {
         id: 'cta',

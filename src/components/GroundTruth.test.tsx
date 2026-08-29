@@ -1,6 +1,8 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { studyManifest } from '../study/manifest';
-import { activeGroundTruthEvents } from './GroundTruth';
+import '../styles.css';
+import { activeGroundTruthEvents, GroundTruth } from './GroundTruth';
 
 describe('activeGroundTruthEvents', () => {
   const config = studyManifest.trials[0].groundTruth;
@@ -15,5 +17,10 @@ describe('activeGroundTruthEvents', () => {
       'headline',
       'detail',
     ]);
+  });
+
+  it('keeps active reference text on one line inside its region', () => {
+    render(<GroundTruth config={config} time={1.2} />);
+    expect(screen.getByText('Supporting text')).toHaveStyle({ whiteSpace: 'nowrap' });
   });
 });
