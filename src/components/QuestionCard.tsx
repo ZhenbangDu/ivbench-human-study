@@ -18,10 +18,13 @@ export function QuestionCard({
   onChange,
 }: QuestionCardProps) {
   return (
-    <fieldset className="question-card">
+    <fieldset
+      className="question-card"
+      style={{ display: 'flex', flexDirection: 'column' }}
+    >
       <legend>{heading}</legend>
       <p>{hint}</p>
-      <div className="choice-row">
+      <div className="choice-row" style={{ marginTop: 'auto' }}>
         {choices.map((choice, index) => (
           <button
             className={`choice-button choice-${choice}`}
