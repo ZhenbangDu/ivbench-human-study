@@ -32,7 +32,7 @@ function groundTruthFor(index: number): GroundTruthConfig {
         text: 'Primary message',
         timeStart: 0.3,
         timeEnd: 3.6,
-        region: { x: textX, y: 0.2, width: 0.36, height: 0.2 },
+        region: { x: textX, y: 0.2, width: 0.38, height: 0.2 },
       },
       {
         id: 'detail',
