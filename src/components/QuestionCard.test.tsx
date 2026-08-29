@@ -1,10 +1,75 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import '../styles.css';
 import { QuestionCard } from './QuestionCard';
 
 const labels = ['Left', 'About the same', 'Right'] as const;
 
+function getRuleProperty(selector: string, property: string, media?: string) {
+  const topLevelRules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]);
+  const rules = media
+    ? [...((topLevelRules.find(
+        (candidate) => (candidate as CSSMediaRule).conditionText === media,
+      ) as CSSMediaRule | undefined)?.cssRules ?? [])]
+    : topLevelRules;
+  const rule = rules.find(
+    (candidate) => (candidate as CSSStyleRule).selectorText === selector,
+  ) as CSSStyleRule | undefined;
+
+  return rule?.style.getPropertyValue(property);
+}
+
 describe('QuestionCard alignment', () => {
+  it('keeps the question and hint comfortably readable without enlarging the controls', () => {
+    render(
+      <QuestionCard
+        heading="Short heading"
+        hint="Short hint"
+        labels={labels}
+        value={null}
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: 'Short heading' })).toBeVisible();
+    expect(screen.getByText('Short hint')).toBeVisible();
+    expect(getRuleProperty('.question-card h2', 'font-size')).toBe(
+      'clamp(17px, 1.12vw, 20px)',
+    );
+    expect(getRuleProperty('.question-card p', 'font-size')).toBe(
+      'clamp(14px, 0.92vw, 16px)',
+    );
+    expect(getRuleProperty('.choice-button', 'font-size')).toBe('14px');
+    expect(
+      getRuleProperty(
+        '.question-card h2',
+        'font-size',
+        '(max-width: 700px) and (orientation: portrait)',
+      ),
+    ).toBe('17px');
+    expect(
+      getRuleProperty(
+        '.question-card p',
+        'font-size',
+        '(max-width: 700px) and (orientation: portrait)',
+      ),
+    ).toBe('14px');
+    expect(
+      getRuleProperty(
+        '.question-card h2',
+        'font-size',
+        '(max-height: 560px) and (orientation: landscape)',
+      ),
+    ).toBe('14px');
+    expect(
+      getRuleProperty(
+        '.question-card p',
+        'font-size',
+        '(max-height: 560px) and (orientation: landscape)',
+      ),
+    ).toBe('11px');
+  });
+
   it('uses a standard flex group instead of fieldset legend layout', () => {
     render(
       <QuestionCard
