@@ -21,6 +21,9 @@ describe('activeGroundTruthEvents', () => {
 
   it('keeps active reference text on one line inside its region', () => {
     render(<GroundTruth config={config} time={1.2} />);
-    expect(screen.getByText('Supporting text')).toHaveStyle({ whiteSpace: 'nowrap' });
+    expect(screen.getByText('Supporting text')).toHaveStyle({
+      whiteSpace: 'nowrap',
+      fontSize: '8px',
+    });
   });
 });

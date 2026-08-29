@@ -42,7 +42,7 @@ export function GroundTruth({ config, time }: GroundTruthProps) {
             key={event.id}
             style={regionStyle(event.region)}
           >
-            <span style={{ whiteSpace: 'nowrap' }}>{event.text}</span>
+            <span style={{ whiteSpace: 'nowrap', fontSize: '8px' }}>{event.text}</span>
           </div>
         ))}
         <div className="gt-timecode">{time.toFixed(1)}s</div>
