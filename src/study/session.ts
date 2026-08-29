@@ -42,3 +42,14 @@ export function normalizeChoice(choice: PhysicalChoice, trial: Trial): string {
   if (choice === 'same') return 'same';
   return choice === 'first' ? trial.first.code : trial.second.code;
 }
+
+export function denormalizeChoice(
+  choice: string | null,
+  trial: Trial,
+): PhysicalChoice | null {
+  if (choice === null) return null;
+  if (choice === 'same') return 'same';
+  if (choice === trial.first.code) return 'first';
+  if (choice === trial.second.code) return 'second';
+  return null;
+}

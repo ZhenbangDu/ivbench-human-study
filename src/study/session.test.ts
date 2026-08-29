@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { studyManifest } from './manifest';
-import { createSession, normalizeChoice } from './session';
+import { createSession, denormalizeChoice, normalizeChoice } from './session';
 
 describe('participant session', () => {
   it('uses a readable participant code when nickname is blank', () => {
@@ -35,5 +35,13 @@ describe('participant session', () => {
     expect(normalizeChoice('first', trial)).toBe('v001a');
     expect(normalizeChoice('same', trial)).toBe('same');
     expect(normalizeChoice('second', trial)).toBe('v001b');
+  });
+
+  it('restores a saved anonymous code to the physical choice after rotation', () => {
+    const trial = studyManifest.trials[0];
+    expect(denormalizeChoice('v001a', trial)).toBe('first');
+    expect(denormalizeChoice('same', trial)).toBe('same');
+    expect(denormalizeChoice('v001b', trial)).toBe('second');
+    expect(denormalizeChoice(null, trial)).toBeNull();
   });
 });
