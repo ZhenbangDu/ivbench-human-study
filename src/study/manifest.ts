@@ -68,7 +68,8 @@ export const studyManifest: StudyManifest = {
   }),
 };
 
-function regionError(region: NormalizedRegion): boolean {
+function regionError(region: NormalizedRegion | null): boolean {
+  if (region === null) return false;
   return (
     region.x < 0 ||
     region.y < 0 ||

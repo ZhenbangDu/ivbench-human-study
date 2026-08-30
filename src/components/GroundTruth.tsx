@@ -31,19 +31,31 @@ export function GroundTruth({ config, time }: GroundTruthProps) {
         <span>Ground Truth</span>
         <span className="ground-truth-purpose">Layout &amp; timing</span>
       </div>
-      <div className="ground-truth-canvas">
+      <div
+        className="ground-truth-canvas"
+        data-testid="ground-truth-canvas"
+        style={{ aspectRatio: `${config.canvas.width} / ${config.canvas.height}` }}
+      >
         <div className="gt-grid" />
-        <div className="gt-region gt-subject" style={regionStyle(config.subjectRegion)}>
-          <span>SUBJECT</span>
-        </div>
-        {activeEvents.map((event) => (
-          <div
-            className="gt-region gt-text"
-            key={event.id}
-            style={regionStyle(event.region)}
-          >
-            <span style={{ whiteSpace: 'nowrap', fontSize: '7px' }}>{event.text}</span>
+        {config.subjectRegion ? (
+          <div className="gt-region gt-subject" style={regionStyle(config.subjectRegion)}>
+            <span>SUBJECT</span>
           </div>
+        ) : (
+          <div className="gt-unconstrained">UNCONSTRAINED</div>
+        )}
+        {activeEvents.map((event) => (
+          event.region ? (
+            <div
+              className="gt-region gt-text"
+              key={event.id}
+              style={regionStyle(event.region)}
+            >
+              <span style={{ whiteSpace: 'nowrap', fontSize: '7px' }}>{event.text}</span>
+            </div>
+          ) : (
+            <div className="gt-unconstrained-text" key={event.id}>{event.text}</div>
+          )
         ))}
         <div className="gt-timecode">{time.toFixed(1)}s</div>
       </div>

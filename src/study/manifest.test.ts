@@ -21,7 +21,9 @@ describe('study manifest', () => {
   it('rejects malformed event timing and regions', () => {
     const broken = structuredClone(studyManifest);
     broken.trials[0].groundTruth.events[0].timeEnd = 9;
-    broken.trials[1].groundTruth.subjectRegion.x = -0.1;
+    const subjectRegion = broken.trials[1].groundTruth.subjectRegion;
+    if (!subjectRegion) throw new Error('Expected the fixture to have a subject region');
+    subjectRegion.x = -0.1;
 
     expect(validateManifest(broken)).toEqual([
       'trial_001: event headline ends after the trial duration',

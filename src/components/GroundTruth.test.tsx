@@ -26,4 +26,33 @@ describe('activeGroundTruthEvents', () => {
       fontSize: '7px',
     });
   });
+
+  it('uses the supplied canvas aspect ratio', () => {
+    render(
+      <GroundTruth
+        config={{ ...config, canvas: { width: 832, height: 480 } }}
+        time={1.2}
+      />,
+    );
+
+    expect(screen.getByTestId('ground-truth-canvas')).toHaveStyle({
+      aspectRatio: '832 / 480',
+    });
+  });
+
+  it('labels layouts without spatial constraints instead of inventing boxes', () => {
+    render(
+      <GroundTruth
+        config={{
+          ...config,
+          subjectRegion: null,
+          events: config.events.map((event) => ({ ...event, region: null })),
+        }}
+        time={1.2}
+      />,
+    );
+
+    expect(screen.getByText('UNCONSTRAINED')).toBeInTheDocument();
+    expect(screen.queryByText('SUBJECT')).not.toBeInTheDocument();
+  });
 });

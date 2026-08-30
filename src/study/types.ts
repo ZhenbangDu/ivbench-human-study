@@ -10,13 +10,13 @@ export type GroundTruthEvent = {
   text: string;
   timeStart: number;
   timeEnd: number;
-  region: NormalizedRegion;
+  region: NormalizedRegion | null;
 };
 
 export type GroundTruthConfig = {
   durationSeconds: number;
-  canvas: { width: 16; height: 9 };
-  subjectRegion: NormalizedRegion;
+  canvas: { width: number; height: number };
+  subjectRegion: NormalizedRegion | null;
   events: GroundTruthEvent[];
 };
 
