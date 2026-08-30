@@ -88,9 +88,11 @@ export function CuratorApp({ api = curatorApi }: CuratorAppProps) {
         : previous);
       setDrafts((previous) => ({ ...previous, [id]: response.selection.comment }));
       setSaveState('saved');
+      return true;
     } catch (saveError) {
       setSaveState('error');
       setError(saveError instanceof Error ? saveError.message : 'Unable to save selection');
+      return false;
     }
   }
 
@@ -118,14 +120,21 @@ export function CuratorApp({ api = curatorApi }: CuratorAppProps) {
   }
 
   async function chooseStatus(status: SelectionStatus) {
-    if (!currentItem) return;
+    if (!currentItem || !payload) return;
     if (saveTimer.current !== null) window.clearTimeout(saveTimer.current);
     saveTimer.current = null;
     pendingComment.current = null;
-    await persist(currentItem.id, {
+    const saved = await persist(currentItem.id, {
       status,
       comment: drafts[currentItem.id] ?? currentItem.selection.comment,
     });
+    if (saved) {
+      const nextItem = payload.items[currentItem.order + 1];
+      if (nextItem) {
+        setCurrentId(nextItem.id);
+        setSaveState('idle');
+      }
+    }
   }
 
   useEffect(() => () => {

@@ -120,6 +120,17 @@ describe('CuratorApp', () => {
     expect(await screen.findByText(/Included: 1 \/ 30/)).toBeVisible();
   });
 
+  it('automatically advances after a decision is saved', async () => {
+    const user = userEvent.setup();
+    const api = fakeApiFor([makeItem('advertisement_01'), makeItem('science_01')]);
+    render(<CuratorApp api={api} />);
+
+    await user.click(await screen.findByRole('button', { name: 'Include' }));
+
+    expect(await screen.findByRole('heading', { name: 'science_01' })).toBeVisible();
+    expect(screen.getByText(/Included: 1 \/ 30/)).toBeVisible();
+  });
+
   it('disables Include and explains a missing ACT final', async () => {
     const api = fakeApiFor([makeItem('safety_32', 'needs_fix', false)]);
     render(<CuratorApp api={api} />);
