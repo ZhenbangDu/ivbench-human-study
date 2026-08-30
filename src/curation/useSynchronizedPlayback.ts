@@ -47,11 +47,10 @@ export function useSynchronizedPlayback(durationSeconds: number, itemId: string)
     if (comparison && Math.abs(comparison.currentTime - currentTime) > 0.15) {
       comparison.currentTime = currentTime;
     }
-    if (currentTime >= durationSeconds - 0.03) setPlaying(false);
-  }, [durationSeconds]);
+  }, []);
 
   useEffect(() => {
-    setPlaying(false);
+    setPlaying(true);
     setTimeState(0);
     for (const video of videos.current) {
       if (video) video.currentTime = 0;

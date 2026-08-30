@@ -131,6 +131,24 @@ describe('CuratorApp', () => {
     expect(screen.getByText(/Included: 1 \/ 30/)).toBeVisible();
   });
 
+  it('automatically loops both videos after entering the next sample', async () => {
+    const user = userEvent.setup();
+    const api = fakeApiFor([makeItem('advertisement_01'), makeItem('science_01')]);
+    const { container } = render(<CuratorApp api={api} />);
+
+    await user.click(await screen.findByRole('button', { name: 'Next sample' }));
+    expect(await screen.findByRole('heading', { name: 'science_01' })).toBeVisible();
+
+    const videos = [...container.querySelectorAll('video')];
+    expect(videos).toHaveLength(2);
+    for (const video of videos) {
+      expect(video).toHaveAttribute('autoplay');
+      expect(video).toHaveAttribute('loop');
+      expect(video).toHaveProperty('muted', true);
+    }
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeVisible();
+  });
+
   it('disables Include and explains a missing ACT final', async () => {
     const api = fakeApiFor([makeItem('safety_32', 'needs_fix', false)]);
     render(<CuratorApp api={api} />);

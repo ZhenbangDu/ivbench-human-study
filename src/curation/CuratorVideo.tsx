@@ -17,6 +17,8 @@ export function CuratorVideo({ label, source, videoRef, onTimeUpdate }: CuratorV
             ref={videoRef}
             src={source}
             preload="metadata"
+            autoPlay
+            loop
             muted
             playsInline
             onTimeUpdate={(event) => onTimeUpdate(event.currentTarget.currentTime)}
