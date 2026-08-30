@@ -29,6 +29,31 @@ pnpm test
 pnpm build
 ```
 
+## Local ACT–MiniMax H3 curation
+
+The repository also contains a separate, local-only curator for choosing the 30 pairs that will enter the public study. It does not change the GitHub Pages interface and it never copies source videos into the repository.
+
+On this machine, the four source locations are already configured in the ignored `.curation/config.json`. Start the curator with:
+
+```bash
+pnpm curate
+```
+
+Then open [http://127.0.0.1:4317/curation.html](http://127.0.0.1:4317/curation.html). The server listens on loopback only.
+
+The curator:
+
+- matches the 200 ACT directories with MiniMax H3, using the dedicated H3 fitness directory for `fitness_*`;
+- extracts only IVBench brief JSON into the ignored local cache and generates the 832×480 layout/timing reference;
+- streams ACT and H3 directly from their current local locations with seekable byte ranges;
+- records `Include`, `Exclude`, `Needs Fix`, and comments after every edit;
+- shows `Included: X / 30` as a target while still allowing a larger shortlist;
+- provides status, subtask, missing-media, comment, and text filters plus JSON/CSV exports.
+
+Selections are stored atomically in `.curation/act-h3-selection.json`. They survive browser and server restarts, and they are intentionally excluded from Git. The two known incomplete ACT items, `safety_32` and `travel_06`, begin as `Needs Fix` and cannot be included until an ACT final video exists.
+
+If the source locations move, edit these fields in `.curation/config.json`: `actRoot`, `h3Root`, `h3FitnessRoot`, and `benchmarkArchive`.
+
 ## Add neutral videos later
 
 1. Put candidate files under `public/media/` using neutral names such as `trial_001_a.mp4` and `trial_001_b.mp4`.
