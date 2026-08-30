@@ -12,7 +12,7 @@ let server
 let baseUrl
 let context
 
-const itemFixture = (actPath, h3Path) => ({
+const itemFixture = (actPath, h3Path, repairedActPath) => ({
   id: 'advertisement_01',
   order: 0,
   subtask: 'advertisement',
@@ -25,18 +25,20 @@ const itemFixture = (actPath, h3Path) => ({
     subjectRegion: { x: 0.333, y: 0, width: 0.667, height: 1 },
     events: [],
   },
-  availability: { act: true, h3: true, complete: true },
+  availability: { act: true, repairedAct: true, h3: true, complete: true },
   failure: null,
-  mediaPaths: { act: actPath, h3: h3Path },
+  mediaPaths: { act: actPath, repairedAct: repairedActPath, h3: h3Path },
 })
 
 beforeEach(async () => {
   root = mkdtempSync(path.join(tmpdir(), 'ivbench-curator-http-'))
   const actPath = path.join(root, 'act.mp4')
   const h3Path = path.join(root, 'h3.mp4')
+  const repairedActPath = path.join(root, 'repaired-act.mp4')
   writeFileSync(actPath, Buffer.from(Array.from({ length: 256 }, (_, index) => index)))
   writeFileSync(h3Path, Buffer.from('h3-video'))
-  const items = [itemFixture(actPath, h3Path)]
+  writeFileSync(repairedActPath, Buffer.from('repaired-act-video'))
+  const items = [itemFixture(actPath, h3Path, repairedActPath)]
   context = {
     items,
     selection: createDefaultSelection(items, 'fp'),
@@ -100,6 +102,48 @@ describe('curator HTTP handler', () => {
     const headResponse = await request('/media/act/advertisement_01', { method: 'HEAD' })
     expect(headResponse.status).toBe(200)
     expect(headResponse.headers.get('content-length')).toBe('256')
+  })
+
+  it('returns only included and needs-fix samples from the read-only shortlist', async () => {
+    context.selection.items.advertisement_01.status = 'include'
+
+    let response = await request('/api/shortlist')
+    let body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body).toMatchObject({ total: 1, repairedCount: 1 })
+    expect(body.items).toHaveLength(1)
+    expect(body.items[0]).toMatchObject({
+      id: 'advertisement_01',
+      actSource: 'repaired',
+      media: {
+        act: '/media/shortlist-act/advertisement_01',
+        h3: '/media/h3/advertisement_01',
+      },
+    })
+
+    context.selection.items.advertisement_01.status = 'exclude'
+    response = await request('/api/shortlist')
+    body = await response.json()
+    expect(body.items).toHaveLength(0)
+
+    context.selection.items.advertisement_01.status = 'needs_fix'
+    response = await request('/api/shortlist')
+    body = await response.json()
+    expect(body.items).toHaveLength(1)
+  })
+
+  it('streams repaired ACT for the shortlist and falls back to the original ACT', async () => {
+    let response = await request('/media/shortlist-act/advertisement_01')
+    expect(await response.text()).toBe('repaired-act-video')
+
+    context.items[0].mediaPaths.repairedAct = null
+    context.items[0].availability.repairedAct = false
+    response = await request('/media/shortlist-act/advertisement_01', {
+      headers: { Range: 'bytes=0-3' },
+    })
+    expect(response.status).toBe(206)
+    expect([...new Uint8Array(await response.arrayBuffer())]).toEqual([0, 1, 2, 3])
   })
 
   it('rejects invalid ranges, traversal, and unknown samples', async () => {

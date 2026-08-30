@@ -64,6 +64,10 @@ describe('curation data', () => {
       'travel_06',
     ])
     expect(items.filter((item) => !item.availability.h3)).toHaveLength(0)
+    expect(items.filter((item) => item.availability.repairedAct)).toHaveLength(27)
+    expect(items.find(({ id }) => id === 'advertisement_07').mediaPaths.repairedAct)
+      .toContain('human_study_repair_20260829/run/rendered/advertisement_07/final.mp4')
+    expect(items.find(({ id }) => id === 'advertisement_01').mediaPaths.repairedAct).toBeNull()
     expect(items.find(({ id }) => id === 'fitness_03').mediaPaths.h3).toContain('h3__fit10_t2vfb')
     expect(items.find(({ id }) => id === 'advertisement_01').groundTruth.canvas).toEqual({
       width: 832,

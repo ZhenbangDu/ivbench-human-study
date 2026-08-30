@@ -6,6 +6,7 @@ import { createServer as createViteServer } from 'vite'
 import { loadCuratorConfig } from './curation-config.mjs'
 import { buildCuratorItems, curatorDatasetFingerprint } from './curation-data.mjs'
 import { createCuratorRequestHandler } from './curation-http.mjs'
+import { curatorViteOptions } from './curation-server-options.mjs'
 import { loadSelection, saveSelection } from './curation-store.mjs'
 
 async function start() {
@@ -21,11 +22,7 @@ async function start() {
   await saveSelection(selectionPath, context.selection)
 
   const apiHandler = createCuratorRequestHandler(context)
-  const vite = await createViteServer({
-    root: process.cwd(),
-    appType: 'spa',
-    server: { middlewareMode: true },
-  })
+  const vite = await createViteServer(curatorViteOptions(config.port))
   const server = createServer((req, res) => {
     const pathname = new URL(req.url ?? '/', 'http://127.0.0.1').pathname
     if (pathname.startsWith('/api/') || pathname.startsWith('/media/')) {

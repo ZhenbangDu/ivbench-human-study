@@ -53,6 +53,9 @@ export function loadCuratorConfig(configPath = DEFAULT_CONFIG_PATH) {
     actRoot: resolveConfiguredPath(raw.actRoot, 'actRoot', baseDirectory, 'directory'),
     h3Root: resolveConfiguredPath(raw.h3Root, 'h3Root', baseDirectory, 'directory'),
     h3FitnessRoot: resolveConfiguredPath(raw.h3FitnessRoot, 'h3FitnessRoot', baseDirectory, 'directory'),
+    repairRoot: raw.repairRoot === undefined
+      ? null
+      : resolveConfiguredPath(raw.repairRoot, 'repairRoot', baseDirectory, 'directory'),
     benchmarkArchive: resolveConfiguredPath(raw.benchmarkArchive, 'benchmarkArchive', baseDirectory, 'file'),
     stateDir: path.resolve(baseDirectory, raw.stateDir),
     configPath: resolvedConfigPath,

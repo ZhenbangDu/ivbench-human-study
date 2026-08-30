@@ -38,6 +38,26 @@ function publicItem(item, selection) {
   }
 }
 
+function publicShortlistItem(item, selection) {
+  const safeItem = publicItem(item, selection)
+  const repaired = Boolean(item.mediaPaths.repairedAct)
+  return {
+    ...safeItem,
+    actSource: repaired ? 'repaired' : 'original',
+    availability: {
+      ...safeItem.availability,
+      act: Boolean(item.mediaPaths.repairedAct || item.mediaPaths.act),
+      complete: Boolean((item.mediaPaths.repairedAct || item.mediaPaths.act) && item.mediaPaths.h3),
+    },
+    media: {
+      act: item.mediaPaths.repairedAct || item.mediaPaths.act
+        ? `/media/shortlist-act/${encodeURIComponent(item.id)}`
+        : null,
+      h3: safeItem.media.h3,
+    },
+  }
+}
+
 async function readJsonBody(req) {
   const chunks = []
   let size = 0
@@ -118,6 +138,20 @@ export function createCuratorRequestHandler(context) {
       return
     }
 
+    if (req.method === 'GET' && url.pathname === '/api/shortlist') {
+      const shortlisted = context.items.filter((item) => {
+        const status = context.selection.items[item.id].status
+        return status === 'include' || status === 'needs_fix'
+      })
+      sendJson(res, 200, {
+        items: shortlisted.map((item) => publicShortlistItem(item, context.selection)),
+        total: shortlisted.length,
+        repairedCount: shortlisted.filter((item) => item.mediaPaths.repairedAct).length,
+        datasetFingerprint: context.selection.datasetFingerprint,
+      })
+      return
+    }
+
     if (req.method === 'GET' && url.pathname === '/api/export.json') {
       sendJson(res, 200, context.selection, {
         'content-disposition': 'attachment; filename="act-h3-selection.json"',
@@ -148,12 +182,14 @@ export function createCuratorRequestHandler(context) {
       return
     }
 
-    const mediaMatch = /^\/media\/(act|h3)\/([^/]+)$/.exec(url.pathname)
+    const mediaMatch = /^\/media\/(act|h3|shortlist-act)\/([^/]+)$/.exec(url.pathname)
     if ((req.method === 'GET' || req.method === 'HEAD') && mediaMatch) {
       const [, source, encodedId] = mediaMatch
       const id = decodeURIComponent(encodedId)
       const item = itemMap.get(id)
-      const filePath = item?.mediaPaths?.[source]
+      const filePath = source === 'shortlist-act'
+        ? item?.mediaPaths?.repairedAct || item?.mediaPaths?.act
+        : item?.mediaPaths?.[source]
       if (!filePath) return sendJson(res, 404, { error: 'Media not found' })
       streamMedia(req, res, filePath)
       return

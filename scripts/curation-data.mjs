@@ -137,6 +137,9 @@ export async function buildCuratorItems(config) {
     const idMatch = SAMPLE_ID_PATTERN.exec(id)
     const sampleDirectory = path.join(config.actRoot, id)
     const actPath = path.join(sampleDirectory, '06_composite', 'final.mp4')
+    const repairedActPath = config.repairRoot
+      ? path.join(config.repairRoot, 'run', 'rendered', id, 'final.mp4')
+      : null
     const h3Base = id.startsWith('fitness_') ? config.h3FitnessRoot : config.h3Root
     const h3Path = path.join(h3Base, `${id}.mp4`)
     const briefPath = path.join(briefsDirectory, `${id}.json`)
@@ -144,6 +147,7 @@ export async function buildCuratorItems(config) {
 
     const brief = readJson(briefPath, `IVBench brief ${id}`)
     const actAvailable = existsSync(actPath)
+    const repairedActAvailable = repairedActPath !== null && existsSync(repairedActPath)
     const h3Available = existsSync(h3Path)
     return {
       id,
@@ -155,12 +159,14 @@ export async function buildCuratorItems(config) {
       groundTruth: convertBriefToGroundTruth(brief),
       availability: {
         act: actAvailable,
+        repairedAct: repairedActAvailable,
         h3: h3Available,
         complete: actAvailable && h3Available,
       },
       failure: actAvailable ? null : failureForSample(sampleDirectory),
       mediaPaths: {
         act: actAvailable ? actPath : null,
+        repairedAct: repairedActAvailable ? repairedActPath : null,
         h3: h3Available ? h3Path : null,
       },
     }

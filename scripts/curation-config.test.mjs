@@ -17,7 +17,7 @@ function createFixture(overrides = {}) {
   const root = mkdtempSync(path.join(tmpdir(), 'ivbench-curator-config-'))
   temporaryDirectories.push(root)
 
-  for (const directory of ['act', 'h3', 'h3-fitness']) {
+  for (const directory of ['act', 'h3', 'h3-fitness', 'repair']) {
     mkdirSync(path.join(root, directory))
   }
   writeFileSync(path.join(root, 'benchmark.tgz'), 'fixture')
@@ -27,6 +27,7 @@ function createFixture(overrides = {}) {
     actRoot: './act',
     h3Root: './h3',
     h3FitnessRoot: './h3-fitness',
+    repairRoot: './repair',
     benchmarkArchive: './benchmark.tgz',
     stateDir: './state',
     port: 4317,
@@ -47,6 +48,7 @@ describe('loadCuratorConfig', () => {
     expect(config.actRoot).toBe(path.join(root, 'act'))
     expect(config.h3Root).toBe(path.join(root, 'h3'))
     expect(config.h3FitnessRoot).toBe(path.join(root, 'h3-fitness'))
+    expect(config.repairRoot).toBe(path.join(root, 'repair'))
     expect(config.benchmarkArchive).toBe(path.join(root, 'benchmark.tgz'))
     expect(config.stateDir).toBe(path.join(root, 'state'))
   })
