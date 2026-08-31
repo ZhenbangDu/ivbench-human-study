@@ -135,6 +135,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .nickname-field input { width: 100%; min-height: 48px; border: 1px solid #ccd3dd; border-radius: 9px; padding: 0 13px; color: #17212e; outline: none; }
 .nickname-field input:focus { border-color: #3972d9; box-shadow: 0 0 0 3px rgba(57, 114, 217, .12); }
 .primary-action { width: 100%; min-height: 50px; margin-top: 18px; border: 0; border-radius: 9px; background: #17212e; color: #fff; font-weight: 800; cursor: pointer; }
+.primary-action:disabled { cursor: not-allowed; opacity: .48; }
 .privacy-note { color: #8a93a0; text-align: center; font-size: 12px; margin: 13px 0 0; }
 .completion-card { text-align: center; }
 .completion-mark { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 auto 20px; border-radius: 50%; color: #fff; background: #2d9b67; font-size: 25px; }

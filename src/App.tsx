@@ -200,6 +200,23 @@ export function App({
     clearSyncRetry();
   }, [clearSyncRetry]);
 
+  const cancelAutoAdvance = () => {
+    if (autoAdvanceTimerRef.current === null) return;
+    window.clearTimeout(autoAdvanceTimerRef.current);
+    autoAdvanceTimerRef.current = null;
+  };
+
+  const resetLocalStudy = () => {
+    store.reset();
+    cancelAutoAdvance();
+    clearSyncRetry();
+    setSession(null);
+    setResponses({});
+    setTrialIndex(0);
+    setReplayCount(0);
+    setSyncLabel(endpoint ? 'Ready to sync' : 'Saved on this device');
+  };
+
   const start = (nickname: string) => {
     const nextSession = createSession(
       nickname,
@@ -233,6 +250,14 @@ export function App({
           </p>
           <div className="completion-code"><span>Completion code</span><strong>{session.completionCode}</strong></div>
           <small>{syncLabel}</small>
+          <button
+            className="primary-action completion-retake"
+            type="button"
+            disabled={!resultsSynced}
+            onClick={resetLocalStudy}
+          >
+            Take the study again
+          </button>
         </section>
       </main>
     );
@@ -242,12 +267,6 @@ export function App({
   const labels = choiceLabels(layout);
   const firstPositionLabel = layout === 'portrait' ? 'Top' : 'Left';
   const secondPositionLabel = layout === 'portrait' ? 'Bottom' : 'Right';
-
-  const cancelAutoAdvance = () => {
-    if (autoAdvanceTimerRef.current === null) return;
-    window.clearTimeout(autoAdvanceTimerRef.current);
-    autoAdvanceTimerRef.current = null;
-  };
 
   const moveTo = (index: number) => {
     cancelAutoAdvance();
@@ -319,14 +338,7 @@ export function App({
     );
     if (!confirmed) return;
 
-    store.reset();
-    cancelAutoAdvance();
-    clearSyncRetry();
-    setSession(null);
-    setResponses({});
-    setTrialIndex(0);
-    setReplayCount(0);
-    setSyncLabel(endpoint ? 'Ready to sync' : 'Saved on this device');
+    resetLocalStudy();
   };
 
   return (

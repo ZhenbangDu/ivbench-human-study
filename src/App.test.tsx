@@ -237,6 +237,49 @@ describe('App', () => {
     expect(screen.queryByText(/please keep this page open/i)).not.toBeInTheDocument();
   });
 
+  it('starts a fresh local study after synced results are safe to retain remotely', async () => {
+    const storage = new MemoryStorage();
+    const store = new StudyStore(storage, 'act-h3-v1');
+    store.startSession(storedSession);
+    store.finishSession('DONE-TEST1234');
+    store.markSynced(store.snapshot().outbox[0]);
+    const user = userEvent.setup();
+
+    render(<App {...appProps} storage={storage} endpoint="https://example.test/exec" />);
+    const retake = screen.getByRole('button', { name: /take the study again/i });
+    expect(retake).toBeEnabled();
+
+    await user.click(retake);
+
+    expect(screen.getByRole('button', { name: /start study/i })).toBeInTheDocument();
+    expect(storage.getItem('ivbench-human-study:act-h3-v1')).toBeNull();
+  });
+
+  it('keeps the retake option disabled until completion results finish syncing', async () => {
+    const storage = new MemoryStorage();
+    const store = new StudyStore(storage, 'act-h3-v1');
+    store.startSession(storedSession);
+    store.finishSession('DONE-TEST1234');
+    let releaseUpload!: () => void;
+    const uploadBlocked = new Promise<void>((resolve) => { releaseUpload = resolve; });
+    vi.stubGlobal('fetch', async (_input: RequestInfo | URL, init?: RequestInit) => {
+      const body = new URLSearchParams(String(init?.body));
+      const envelope = JSON.parse(body.get('payload') ?? '{}');
+      await uploadBlocked;
+      return new Response(JSON.stringify({ ok: true, requestId: envelope.requestId }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+
+    render(<App {...appProps} storage={storage} endpoint="https://example.test/exec" />);
+    const retake = screen.getByRole('button', { name: /take the study again/i });
+    expect(retake).toBeDisabled();
+
+    releaseUpload();
+    await waitFor(() => expect(retake).toBeEnabled());
+  });
+
   it('describes a completed no-endpoint study as saved locally, not synced', () => {
     const storage = new MemoryStorage();
     const store = new StudyStore(storage, 'act-h3-v1');
@@ -247,6 +290,7 @@ describe('App', () => {
 
     expect(screen.getByText(/results are saved on this device/i)).toBeInTheDocument();
     expect(screen.queryByText(/results are synced/i)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /take the study again/i })).toBeDisabled();
   });
 
   it('shows the approved question copy', async () => {
