@@ -316,6 +316,12 @@ describe('App', () => {
     }
   });
 
+  it('points the first two evaluation questions to the Ground Truth reference', async () => {
+    await startStudy();
+
+    expect(screen.getAllByText('(Refer to the Ground Truth above.)')).toHaveLength(2);
+  });
+
   it('clears local study progress and returns to the welcome screen after confirmation', async () => {
     const storage = new MemoryStorage();
     const user = userEvent.setup();

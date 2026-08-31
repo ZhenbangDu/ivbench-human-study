@@ -39,14 +39,20 @@ const questions: Array<{ key: QuestionKey; heading: string; hint: ReactNode }> =
     key: 'informationChoice',
     heading: 'Which video makes the information easier to read and understand?',
     hint: (
-      <>Is the text <strong>correct</strong>, <strong>clear</strong>, and shown at the <strong>right time</strong>?</>
+      <>
+        Is the text <strong>correct</strong>, <strong>clear</strong>, and shown at the <strong>right time</strong>?{' '}
+        <span className="ground-truth-reminder">(Refer to the Ground Truth above.)</span>
+      </>
     ),
   },
   {
     key: 'placementChoice',
     heading: 'Which video puts the text in a better place?',
     hint: (
-      <>Is the text <strong>where it should be</strong>, without <strong>covering the main subject</strong>?</>
+      <>
+        Is the text <strong>where it should be</strong>, without <strong>covering the main subject</strong>?{' '}
+        <span className="ground-truth-reminder">(Refer to the Ground Truth above.)</span>
+      </>
     ),
   },
   {
