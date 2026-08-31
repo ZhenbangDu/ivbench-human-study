@@ -15,4 +15,5 @@ export type ShortlistPayload = {
 
 export type ShortlistApi = {
   fetchShortlist(): Promise<ShortlistPayload>;
+  saveComment(id: string, comment: string): Promise<ShortlistItem['selection']>;
 };

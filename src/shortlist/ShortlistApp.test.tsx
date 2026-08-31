@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ShortlistApp } from './ShortlistApp';
-import type { ShortlistApi, ShortlistItem } from './types';
+import type { ShortlistItem } from './types';
 
 function makeItem(
   id: string,
@@ -38,8 +38,13 @@ function makeItem(
   };
 }
 
-function fakeApiFor(rawItems: ShortlistItem[]): ShortlistApi {
+function fakeApiFor(rawItems: ShortlistItem[]) {
   const items = rawItems.map((item, order) => ({ ...item, order }));
+  const saveComment = vi.fn(async (id: string, comment: string) => {
+    const item = items.find((candidate) => candidate.id === id);
+    if (!item) throw new Error(`Unknown sample: ${id}`);
+    return { ...item.selection, comment, updatedAt: '2026-08-30T01:00:00.000Z' };
+  });
   return {
     fetchShortlist: vi.fn(async () => ({
       items,
@@ -47,11 +52,13 @@ function fakeApiFor(rawItems: ShortlistItem[]): ShortlistApi {
       repairedCount: items.filter((item) => item.actSource === 'repaired').length,
       datasetFingerprint: 'fixture',
     })),
+    saveComment,
   };
 }
 
 describe('ShortlistApp', () => {
-  it('shows the read-only ACT, ground truth, H3 comparison and curator note', async () => {
+  it('shows the ACT, ground truth, H3 comparison and an editable curator comment', async () => {
+    const user = userEvent.setup();
     const api = fakeApiFor([
       makeItem('advertisement_07', 'needs_fix', 'repaired', 'remove the black background'),
     ]);
@@ -65,7 +72,11 @@ describe('ShortlistApp', () => {
     expect(screen.getByText('MiniMax H3')).toBeVisible();
     expect(screen.getByText('Ground Truth')).toBeVisible();
     expect(screen.getByText('Goal for advertisement_07')).toBeVisible();
-    expect(screen.getByText('remove the black background')).toBeVisible();
+    const comment = screen.getByRole('textbox', { name: 'Curator comment' });
+    expect(comment).toHaveValue('remove the black background');
+    await user.clear(comment);
+    await user.type(comment, 'remove the dots');
+    expect(comment).toHaveValue('remove the dots');
     expect(screen.queryByRole('button', { name: 'Include' })).not.toBeInTheDocument();
   });
 
@@ -86,6 +97,67 @@ describe('ShortlistApp', () => {
 
     await user.selectOptions(screen.getByLabelText('Subtask'), 'science');
     expect(screen.getByText('2 shown')).toBeVisible();
+  });
+
+  it('autosaves a changed comment after typing pauses', async () => {
+    const user = userEvent.setup();
+    const api = fakeApiFor([
+      makeItem('advertisement_07', 'needs_fix', 'repaired', 'old note'),
+    ]);
+
+    render(<ShortlistApp api={api} />);
+
+    const comment = await screen.findByRole('textbox', { name: 'Curator comment' });
+    await user.clear(comment);
+    await user.type(comment, 'updated note');
+
+    await vi.waitFor(() => {
+      expect(api.saveComment).toHaveBeenCalledWith('advertisement_07', 'updated note');
+    }, { timeout: 1_500 });
+    expect(screen.getByText('Saved')).toBeVisible();
+  });
+
+  it('saves a changed comment immediately when the editor loses focus', async () => {
+    const user = userEvent.setup();
+    const api = fakeApiFor([
+      makeItem('advertisement_07', 'needs_fix', 'repaired'),
+    ]);
+
+    render(<ShortlistApp api={api} />);
+
+    const comment = await screen.findByRole('textbox', { name: 'Curator comment' });
+    await user.type(comment, 'check the font');
+    await user.tab();
+
+    expect(api.saveComment).toHaveBeenCalledWith('advertisement_07', 'check the font');
+  });
+
+  it('saves a pending comment before navigating to another pair', async () => {
+    const user = userEvent.setup();
+    const api = fakeApiFor([
+      makeItem('advertisement_07', 'needs_fix', 'repaired'),
+      makeItem('science_29', 'include', 'original'),
+    ]);
+    let finishSave!: (selection: ShortlistItem['selection']) => void;
+    api.saveComment.mockImplementation(() => new Promise((resolve) => {
+      finishSave = resolve;
+    }));
+
+    render(<ShortlistApp api={api} />);
+
+    const comment = await screen.findByRole('textbox', { name: 'Curator comment' });
+    await user.type(comment, 'fix this sample');
+    await user.click(screen.getByRole('button', { name: 'Next sample' }));
+
+    expect(api.saveComment).toHaveBeenCalledWith('advertisement_07', 'fix this sample');
+    expect(screen.getByRole('heading', { name: 'advertisement_07' })).toBeVisible();
+
+    await act(async () => finishSave({
+      status: 'needs_fix',
+      comment: 'fix this sample',
+      updatedAt: '2026-08-30T01:00:00.000Z',
+    }));
+    expect(await screen.findByRole('heading', { name: 'science_29' })).toBeVisible();
   });
 
   it('navigates to the next pair with both videos looping', async () => {

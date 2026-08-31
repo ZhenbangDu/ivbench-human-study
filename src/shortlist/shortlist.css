@@ -96,8 +96,8 @@
 
 .shortlist-note {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
+  grid-template-columns: 142px minmax(0, 1fr);
+  align-items: stretch;
   gap: 13px;
   max-width: 980px;
   margin: clamp(20px, 3vh, 30px) auto 0;
@@ -107,8 +107,27 @@
   padding: 13px 15px;
   box-shadow: 0 7px 24px rgba(31, 44, 64, .045);
 }
-.shortlist-note span { border-radius: 999px; background: #eef2f7; padding: 5px 8px; color: #667386; font-size: 9px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
-.shortlist-note p { margin: 2px 0 0; color: #445166; font-size: 13px; line-height: 1.45; }
+.shortlist-note-heading { display: flex; align-items: flex-start; flex-direction: column; gap: 8px; padding-top: 3px; }
+.shortlist-note-heading label { color: #344257; font-size: 12px; font-weight: 850; }
+.shortlist-save-status { min-height: 16px; color: #7d8999; font-size: 11px; font-weight: 700; }
+.shortlist-save-status.is-saved { color: #25815a; }
+.shortlist-save-status.is-error { color: #b84343; }
+.shortlist-note textarea {
+  width: 100%;
+  min-height: 78px;
+  resize: vertical;
+  border: 1px solid #c8d1de;
+  border-radius: 8px;
+  outline: none;
+  background: #fbfcfe;
+  padding: 10px 11px;
+  color: #344257;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.shortlist-note textarea::placeholder { color: #9aa4b2; }
+.shortlist-note textarea:focus { border-color: #4b7fda; background: #fff; box-shadow: 0 0 0 3px rgba(75, 127, 218, .13); }
 
 @media (max-width: 1180px) {
   .shortlist-workspace { grid-template-columns: 220px minmax(0, 1fr); }
@@ -130,4 +149,5 @@
   .shortlist-heading .curator-nav-buttons button { overflow: hidden; width: 42px; white-space: nowrap; }
   .shortlist-heading .curator-nav-buttons button:first-child { text-indent: -57px; }
   .shortlist-note { grid-template-columns: 1fr; }
+  .shortlist-note-heading { align-items: center; flex-direction: row; justify-content: space-between; }
 }

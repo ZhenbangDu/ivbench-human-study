@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { GroundTruth } from '../components/GroundTruth';
 import { CuratorVideo } from '../curation/CuratorVideo';
 import { useSynchronizedPlayback } from '../curation/useSynchronizedPlayback';
@@ -6,6 +6,7 @@ import { shortlistApi } from './api';
 import type { ShortlistApi, ShortlistItem, ShortlistPayload } from './types';
 
 type StatusFilter = 'all' | ShortlistItem['selection']['status'];
+type CommentSaveState = { id: string; status: 'saving' | 'saved' | 'error' } | null;
 
 const STATUS_LABELS = {
   include: 'Included',
@@ -18,7 +19,13 @@ export function ShortlistApp({ api = shortlistApi }: { api?: ShortlistApi }) {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [subtaskFilter, setSubtaskFilter] = useState('all');
+  const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
+  const [commentSaveState, setCommentSaveState] = useState<CommentSaveState>(null);
   const [error, setError] = useState('');
+  const commentSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const commentDraftsRef = useRef<Record<string, string>>({});
+  const persistedCommentsRef = useRef<Record<string, string>>({});
+  const commentSaveInFlight = useRef<{ id: string; promise: Promise<boolean> } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -27,10 +34,80 @@ export function ShortlistApp({ api = shortlistApi }: { api?: ShortlistApi }) {
         if (!active) return;
         setPayload(nextPayload);
         setCurrentId(nextPayload.items[0]?.id ?? '');
+        const initialComments = Object.fromEntries(
+          nextPayload.items.map((item) => [item.id, item.selection.comment]),
+        );
+        commentDraftsRef.current = { ...initialComments };
+        persistedCommentsRef.current = { ...initialComments };
+        setCommentDrafts(initialComments);
       })
       .catch((loadError: Error) => active && setError(loadError.message));
     return () => { active = false; };
   }, [api]);
+
+  useEffect(() => () => {
+    if (commentSaveTimer.current) clearTimeout(commentSaveTimer.current);
+  }, []);
+
+  function persistComment(id: string, comment: string) {
+    setCommentSaveState({ id, status: 'saving' });
+    let promise: Promise<boolean>;
+    promise = api.saveComment(id, comment)
+      .then((selection) => {
+        persistedCommentsRef.current[id] = selection.comment;
+        setPayload((current) => current ? {
+          ...current,
+          items: current.items.map((item) => item.id === id ? { ...item, selection } : item),
+        } : current);
+        if (commentDraftsRef.current[id] === selection.comment) {
+          setCommentSaveState({ id, status: 'saved' });
+        }
+        return true;
+      })
+      .catch(() => {
+        setCommentSaveState({ id, status: 'error' });
+        return false;
+      })
+      .finally(() => {
+        if (commentSaveInFlight.current?.promise === promise) {
+          commentSaveInFlight.current = null;
+        }
+      });
+    commentSaveInFlight.current = { id, promise };
+    return promise;
+  }
+
+  async function flushComment(id: string) {
+    if (commentSaveTimer.current) {
+      clearTimeout(commentSaveTimer.current);
+      commentSaveTimer.current = null;
+    }
+    while (true) {
+      const inFlight = commentSaveInFlight.current;
+      if (inFlight) {
+        if (!await inFlight.promise) return false;
+        continue;
+      }
+      const comment = commentDraftsRef.current[id] ?? '';
+      if (persistedCommentsRef.current[id] === comment) return true;
+      if (!await persistComment(id, comment)) return false;
+    }
+  }
+
+  async function navigateAfterSaving(fromId: string, toId: string) {
+    if (fromId === toId || await flushComment(fromId)) setCurrentId(toId);
+  }
+
+  function changeComment(id: string, comment: string) {
+    commentDraftsRef.current[id] = comment;
+    setCommentDrafts((drafts) => ({ ...drafts, [id]: comment }));
+    setCommentSaveState(null);
+    if (commentSaveTimer.current) clearTimeout(commentSaveTimer.current);
+    commentSaveTimer.current = setTimeout(() => {
+      commentSaveTimer.current = null;
+      void flushComment(id);
+    }, 500);
+  }
 
   const subtaskOptions = useMemo(
     () => [...new Set(payload?.items.map((item) => item.subtask) ?? [])],
@@ -67,7 +144,7 @@ export function ShortlistApp({ api = shortlistApi }: { api?: ShortlistApi }) {
     <div className="shortlist-shell">
       <header className="shortlist-header">
         <div>
-          <span className="curator-kicker">READ-ONLY REVIEW</span>
+          <span className="curator-kicker">SHORTLIST REVIEW</span>
           <strong>ACT vs. MiniMax H3</strong>
           <span>Current shortlist</span>
         </div>
@@ -108,7 +185,7 @@ export function ShortlistApp({ api = shortlistApi }: { api?: ShortlistApi }) {
                 key={item.id}
                 aria-current={item.id === currentItem.id ? 'true' : undefined}
                 className={`shortlist-item shortlist-item-${item.selection.status}`}
-                onClick={() => setCurrentId(item.id)}
+                onClick={() => void navigateAfterSaving(currentItem.id, item.id)}
               >
                 <span>{item.id}</span>
                 <small>{STATUS_LABELS[item.selection.status]} · {item.actSource === 'repaired' ? 'Repaired ACT' : 'Original ACT'}</small>
@@ -129,13 +206,19 @@ export function ShortlistApp({ api = shortlistApi }: { api?: ShortlistApi }) {
               <button
                 aria-label="Previous sample"
                 disabled={currentVisibleIndex <= 0}
-                onClick={() => setCurrentId(visibleItems[currentVisibleIndex - 1]?.id ?? currentItem.id)}
+                onClick={() => void navigateAfterSaving(
+                  currentItem.id,
+                  visibleItems[currentVisibleIndex - 1]?.id ?? currentItem.id,
+                )}
               >← Previous</button>
               <span>{currentVisibleIndex + 1} / {visibleItems.length}</span>
               <button
                 aria-label="Next sample"
                 disabled={currentVisibleIndex < 0 || currentVisibleIndex === visibleItems.length - 1}
-                onClick={() => setCurrentId(visibleItems[currentVisibleIndex + 1]?.id ?? currentItem.id)}
+                onClick={() => void navigateAfterSaving(
+                  currentItem.id,
+                  visibleItems[currentVisibleIndex + 1]?.id ?? currentItem.id,
+                )}
               >Next →</button>
             </nav>
           </div>
@@ -147,9 +230,25 @@ export function ShortlistApp({ api = shortlistApi }: { api?: ShortlistApi }) {
 
           <Comparison item={currentItem} />
 
-          <section className="shortlist-note" aria-label="Curator note">
-            <span>Curator note</span>
-            <p>{currentItem.selection.comment || 'No curator comment for this pair.'}</p>
+          <section className="shortlist-note" aria-label="Curator comment editor">
+            <div className="shortlist-note-heading">
+              <label htmlFor="shortlist-comment">Curator comment</label>
+              <span
+                aria-live="polite"
+                className={`shortlist-save-status ${commentSaveState?.id === currentItem.id ? `is-${commentSaveState.status}` : ''}`}
+              >
+                {commentSaveState?.id === currentItem.id && commentSaveState.status === 'saving' && 'Saving…'}
+                {commentSaveState?.id === currentItem.id && commentSaveState.status === 'saved' && 'Saved'}
+                {commentSaveState?.id === currentItem.id && commentSaveState.status === 'error' && 'Could not save'}
+              </span>
+            </div>
+            <textarea
+              id="shortlist-comment"
+              value={commentDrafts[currentItem.id] ?? ''}
+              placeholder="Leave a note for this sample…"
+              onChange={(event) => changeComment(currentItem.id, event.target.value)}
+              onBlur={() => void flushComment(currentItem.id)}
+            />
           </section>
         </main>
       </div>
