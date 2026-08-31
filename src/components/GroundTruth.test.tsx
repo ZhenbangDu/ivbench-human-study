@@ -47,12 +47,19 @@ describe('activeGroundTruthEvents', () => {
     ]);
   });
 
-  it('keeps active reference text on one line inside its region', () => {
+  it('uses readable type sizes for the reference labels', () => {
     render(<GroundTruth config={config} time={1.2} />);
-    expect(screen.getByText('Supporting text')).toHaveStyle({
-      whiteSpace: 'nowrap',
-      fontSize: '7px',
-    });
+
+    expect(parseFloat(getComputedStyle(screen.getByText('Supporting text')).fontSize))
+      .toBeGreaterThanOrEqual(11);
+    expect(parseFloat(getComputedStyle(screen.getByText('SUBJECT')).fontSize))
+      .toBeGreaterThanOrEqual(12);
+  });
+
+  it('allows reference text to wrap inside its region', () => {
+    render(<GroundTruth config={config} time={1.2} />);
+
+    expect(getComputedStyle(screen.getByText('Supporting text')).whiteSpace).toBe('normal');
   });
 
   it('stacks simultaneous text events that share one layout region', () => {

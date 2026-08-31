@@ -91,8 +91,9 @@ function useMasterClock(duration: number, trialId: string) {
     const timer = window.setInterval(() => {
       const next = (performance.now() - originRef.current) / 1000;
       if (next >= duration) {
-        setTime(duration);
-        setPlaying(false);
+        const loopedTime = next % duration;
+        originRef.current = performance.now() - loopedTime * 1000;
+        setTime(loopedTime);
       } else {
         setTime(next);
       }

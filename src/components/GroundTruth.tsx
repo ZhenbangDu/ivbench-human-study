@@ -70,9 +70,7 @@ export function GroundTruth({ config, time }: GroundTruthProps) {
             style={regionStyle(region)}
           >
             {events.map((event) => (
-              <span key={event.id} style={{ whiteSpace: 'nowrap', fontSize: '7px' }}>
-                {event.text}
-              </span>
+              <span key={event.id}>{event.text}</span>
             ))}
           </div>
         ))}

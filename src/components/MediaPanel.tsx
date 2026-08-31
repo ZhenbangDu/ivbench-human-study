@@ -26,7 +26,15 @@ export function MediaPanel({ candidate, label, playing, time }: MediaPanelProps)
     <section className="candidate-card" aria-label={`${label} candidate video`}>
       <div className="candidate-frame">
         {candidate.src ? (
-          <video ref={videoRef} src={candidate.src} muted playsInline preload="metadata" />
+          <video
+            ref={videoRef}
+            src={candidate.src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+          />
         ) : (
           <div className="video-empty-state">
             <span className="video-empty-icon" aria-hidden="true">▶</span>

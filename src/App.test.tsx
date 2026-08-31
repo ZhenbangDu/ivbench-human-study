@@ -95,6 +95,21 @@ describe('App', () => {
     await waitFor(() => expect(screen.getByText('2 / 30')).toBeInTheDocument());
   });
 
+  it('keeps the synchronized playback running after a trial duration elapses', async () => {
+    vi.useFakeTimers();
+    const storage = new MemoryStorage();
+    const store = new StudyStore(storage, 'act-h3-v1');
+    store.startSession(storedSession);
+    store.markSynced(store.snapshot().outbox[0]);
+
+    render(<App {...appProps} storage={storage} />);
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(5200); });
+
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
+  });
+
   it('uploads one final response only after all three questions are answered', async () => {
     const storage = new MemoryStorage();
     const uploadedTypes: string[] = [];

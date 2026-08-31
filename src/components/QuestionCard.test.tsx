@@ -125,4 +125,22 @@ describe('QuestionCard alignment', () => {
       'auto',
     ]);
   });
+
+  it('gives the selected option a clearly visible outline', () => {
+    render(
+      <QuestionCard
+        heading="Choose a video"
+        hint="Pick one option"
+        labels={labels}
+        value="first"
+        onChange={() => undefined}
+      />,
+    );
+
+    const selected = screen.getByRole('button', { name: 'Left' });
+    const unselected = screen.getByRole('button', { name: 'Right' });
+    expect(getComputedStyle(selected).outlineStyle).toBe('solid');
+    expect(parseFloat(getComputedStyle(selected).outlineWidth)).toBeGreaterThanOrEqual(3);
+    expect(getComputedStyle(unselected).outlineStyle).not.toBe('solid');
+  });
 });
