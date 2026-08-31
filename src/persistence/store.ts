@@ -1,5 +1,8 @@
 import type { ParticipantSession } from '../study/session';
 
+const COMPLETION_SYNC_VERSION = 1;
+const COMPLETED_RESPONSE_COUNT = 30;
+
 export type DeviceLayout = 'desktop' | 'portrait' | 'landscape';
 export type StoredChoice = string | 'same' | null;
 
@@ -34,6 +37,7 @@ type StudyState = {
   currentTrialIndex: number;
   responses: Record<string, TrialResponse>;
   outbox: OutboxItem[];
+  completionSyncVersion?: number;
 };
 
 export interface StorageLike {
@@ -119,6 +123,7 @@ export class StudyStore {
       status: 'completed',
       completionCode,
     };
+    this.state.completionSyncVersion = COMPLETION_SYNC_VERSION;
     this.state.outbox = upsertOutbox(this.state.outbox, {
       requestId: `session:${this.state.session.sessionId}`,
       type: 'session',
@@ -149,13 +154,37 @@ export class StudyStore {
     try {
       const parsed = JSON.parse(saved) as StudyState;
       if (parsed.studyVersion !== studyVersion) return initialState(studyVersion);
-      return {
+      const loaded = {
         ...parsed,
         outbox: parsed.outbox.filter((item) => (
           item.type === 'session'
           || isCompleteResponse(item.payload as TrialResponse)
         )),
       };
+      if (
+        loaded.session?.status !== 'completed'
+        || loaded.completionSyncVersion === COMPLETION_SYNC_VERSION
+      ) return loaded;
+
+      const completeResponses = Object.values(loaded.responses)
+        .filter(isCompleteResponse)
+        .sort((first, second) => first.trialIndex - second.trialIndex);
+      if (completeResponses.length !== COMPLETED_RESPONSE_COUNT) return loaded;
+
+      for (const response of completeResponses) {
+        loaded.outbox = upsertOutbox(loaded.outbox, {
+          requestId: response.requestId,
+          type: 'response',
+          payload: response,
+        });
+      }
+      loaded.outbox = upsertOutbox(loaded.outbox, {
+        requestId: `session:${loaded.session.sessionId}`,
+        type: 'session',
+        payload: loaded.session,
+      });
+      loaded.completionSyncVersion = COMPLETION_SYNC_VERSION;
+      return loaded;
     } catch {
       return initialState(studyVersion);
     }

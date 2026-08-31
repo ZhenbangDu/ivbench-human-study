@@ -48,6 +48,40 @@ const response: TrialResponse = {
   updatedAt: '2026-08-28T12:01:00.000Z',
 };
 
+function responseForTrial(trialIndex: number): TrialResponse {
+  const item = String(trialIndex + 1).padStart(3, '0');
+  return {
+    ...response,
+    requestId: `response:session-1:trial_${item}`,
+    trialId: `trial_${item}`,
+    itemId: `item_${item}`,
+    trialIndex,
+    firstPositionVideoCode: `v${item}a`,
+    secondPositionVideoCode: `v${item}b`,
+    informationChoice: `v${item}a`,
+    overallChoice: `v${item}b`,
+  };
+}
+
+function legacyCompletedState() {
+  return {
+    studyVersion: 'act-h3-v1',
+    session: {
+      ...session,
+      status: 'completed',
+      completionCode: 'DONE-SESSION1',
+    },
+    currentTrialIndex: 29,
+    responses: Object.fromEntries(
+      Array.from({ length: 30 }, (_, index) => {
+        const savedResponse = responseForTrial(index);
+        return [savedResponse.trialId, savedResponse];
+      }),
+    ),
+    outbox: [],
+  };
+}
+
 describe('StudyStore', () => {
   let storage: MemoryStorage;
 
@@ -120,6 +154,55 @@ describe('StudyStore', () => {
     const reopened = new StudyStore(storage, 'act-h3-v1').snapshot();
 
     expect(reopened.responses.trial_001).toEqual(partial);
+    expect(reopened.outbox).toHaveLength(0);
+  });
+
+  it('requeues every complete response before a legacy completed session', () => {
+    storage.setItem(
+      'ivbench-human-study:act-h3-v1',
+      JSON.stringify(legacyCompletedState()),
+    );
+
+    const recovered = new StudyStore(storage, 'act-h3-v1').snapshot();
+
+    expect(recovered.outbox).toHaveLength(31);
+    expect(recovered.outbox.slice(0, 30).map(({ requestId }) => requestId)).toEqual(
+      Array.from(
+        { length: 30 },
+        (_, index) => `response:session-1:trial_${String(index + 1).padStart(3, '0')}`,
+      ),
+    );
+    expect(recovered.outbox[30]).toMatchObject({
+      requestId: 'session:session-1',
+      type: 'session',
+      payload: { status: 'completed' },
+    });
+  });
+
+  it('does not replay a repaired completed session on later reloads', () => {
+    storage.setItem(
+      'ivbench-human-study:act-h3-v1',
+      JSON.stringify(legacyCompletedState()),
+    );
+    const recovered = new StudyStore(storage, 'act-h3-v1');
+    for (const item of recovered.snapshot().outbox) recovered.markSynced(item);
+
+    const reopened = new StudyStore(storage, 'act-h3-v1').snapshot();
+
+    expect(reopened.outbox).toHaveLength(0);
+  });
+
+  it('does not replay a newly completed session after its queue is acknowledged', () => {
+    const store = new StudyStore(storage, 'act-h3-v1');
+    store.startSession(session);
+    for (let index = 0; index < 30; index += 1) {
+      store.saveResponse(responseForTrial(index));
+    }
+    store.finishSession('DONE-SESSION1');
+    for (const item of store.snapshot().outbox) store.markSynced(item);
+
+    const reopened = new StudyStore(storage, 'act-h3-v1').snapshot();
+
     expect(reopened.outbox).toHaveLength(0);
   });
 });
