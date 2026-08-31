@@ -134,7 +134,10 @@ export function App({
   const [session, setSession] = useState<ParticipantSession | null>(initial.session);
   const [responses, setResponses] = useState(initial.responses);
   const [trialIndex, setTrialIndex] = useState(initial.currentTrialIndex);
-  const [syncLabel, setSyncLabel] = useState(endpoint ? 'Ready to sync' : 'Saved on this device');
+  const [syncLabel, setSyncLabel] = useState(() => {
+    if (!endpoint) return 'Saved on this device';
+    return initial.outbox.length === 0 ? 'Synced' : 'Ready to sync';
+  });
   const [replayCount, setReplayCount] = useState(0);
   const autoAdvanceTimerRef = useRef<number | null>(null);
   const syncRetryTimerRef = useRef<number | null>(null);
@@ -167,6 +170,7 @@ export function App({
     }
 
     setSyncLabel('Sync delayed — saved locally');
+    clearSyncRetry();
     syncRetryTimerRef.current = window.setTimeout(() => {
       void synchronizeRef.current();
     }, 3000);
@@ -210,17 +214,21 @@ export function App({
   if (!session) return <Welcome onStart={start} />;
 
   if (session.status === 'completed') {
-    const resultsSynced = !endpoint || syncLabel === 'Synced';
+    const localOnly = !endpoint;
+    const resultsSynced = Boolean(endpoint) && syncLabel === 'Synced';
+    const completionMessage = localOnly
+      ? 'Results are saved on this device. They have not been uploaded.'
+      : resultsSynced
+        ? 'All results are synced. You can now close this page.'
+        : 'Please keep this page open while your results sync.';
     return (
       <main className="completion-shell">
         <section className="completion-card">
           <div className="completion-mark">✓</div>
           <div className="eyebrow">STUDY COMPLETE</div>
           <h1>Thank you, {session.displayName}.</h1>
-          <p className={resultsSynced ? 'completion-sync-ready' : 'completion-sync-waiting'}>
-            {resultsSynced
-              ? 'All results are synced. You can now close this page.'
-              : 'Please keep this page open while your results sync.'}
+          <p className={resultsSynced || localOnly ? 'completion-sync-ready' : 'completion-sync-waiting'}>
+            {completionMessage}
           </p>
           <div className="completion-code"><span>Completion code</span><strong>{session.completionCode}</strong></div>
           <small>{syncLabel}</small>
@@ -280,7 +288,7 @@ export function App({
       updatedAt: new Date().toISOString(),
       [key]: normalized,
     };
-    store.saveResponse(response, isComplete(response));
+    store.saveResponse(response);
     setResponses(store.snapshot().responses);
     if (!isComplete(response)) {
       setSyncLabel(endpoint ? 'Saved locally' : 'Saved on this device');

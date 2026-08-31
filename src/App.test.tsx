@@ -209,6 +209,31 @@ describe('App', () => {
     expect(screen.getByText(/results are synced.*close this page/i)).toBeInTheDocument();
   });
 
+  it('reopens an already-synced completion page as safe to close', () => {
+    const storage = new MemoryStorage();
+    const store = new StudyStore(storage, 'act-h3-v1');
+    store.startSession(storedSession);
+    store.finishSession('DONE-TEST1234');
+    store.markSynced(store.snapshot().outbox[0]);
+
+    render(<App {...appProps} storage={storage} endpoint="https://example.test/exec" />);
+
+    expect(screen.getByText(/results are synced.*close this page/i)).toBeInTheDocument();
+    expect(screen.queryByText(/please keep this page open/i)).not.toBeInTheDocument();
+  });
+
+  it('describes a completed no-endpoint study as saved locally, not synced', () => {
+    const storage = new MemoryStorage();
+    const store = new StudyStore(storage, 'act-h3-v1');
+    store.startSession(storedSession);
+    store.finishSession('DONE-TEST1234');
+
+    render(<App {...appProps} storage={storage} endpoint="" />);
+
+    expect(screen.getByText(/results are saved on this device/i)).toBeInTheDocument();
+    expect(screen.queryByText(/results are synced/i)).not.toBeInTheDocument();
+  });
+
   it('shows the approved question copy', async () => {
     await startStudy();
     expect(screen.getByText('Which video makes the information easier to read and understand?')).toBeInTheDocument();

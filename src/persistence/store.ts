@@ -57,6 +57,14 @@ function upsertOutbox(items: OutboxItem[], item: OutboxItem): OutboxItem[] {
   return [...remaining, item];
 }
 
+function isCompleteResponse(response: TrialResponse): boolean {
+  return Boolean(
+    response.informationChoice
+    && response.placementChoice
+    && response.overallChoice,
+  );
+}
+
 export class StudyStore {
   private readonly key: string;
   private state: StudyState;
@@ -83,9 +91,9 @@ export class StudyStore {
     this.persist();
   }
 
-  saveResponse(response: TrialResponse, queueForSync = true) {
+  saveResponse(response: TrialResponse) {
     this.state.responses[response.trialId] = response;
-    if (queueForSync) {
+    if (isCompleteResponse(response)) {
       this.state.outbox = upsertOutbox(this.state.outbox, {
         requestId: response.requestId,
         type: 'response',
@@ -141,7 +149,13 @@ export class StudyStore {
     try {
       const parsed = JSON.parse(saved) as StudyState;
       if (parsed.studyVersion !== studyVersion) return initialState(studyVersion);
-      return parsed;
+      return {
+        ...parsed,
+        outbox: parsed.outbox.filter((item) => (
+          item.type === 'session'
+          || isCompleteResponse(item.payload as TrialResponse)
+        )),
+      };
     } catch {
       return initialState(studyVersion);
     }

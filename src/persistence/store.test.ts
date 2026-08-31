@@ -98,4 +98,28 @@ describe('StudyStore', () => {
       'response:session-1:trial_001',
     ]);
   });
+
+  it('preserves legacy partial drafts but removes them from the upload queue', () => {
+    const partial = {
+      ...response,
+      placementChoice: null,
+      overallChoice: null,
+    };
+    storage.setItem('ivbench-human-study:act-h3-v1', JSON.stringify({
+      studyVersion: 'act-h3-v1',
+      session,
+      currentTrialIndex: 0,
+      responses: { trial_001: partial },
+      outbox: [{
+        requestId: partial.requestId,
+        type: 'response',
+        payload: partial,
+      }],
+    }));
+
+    const reopened = new StudyStore(storage, 'act-h3-v1').snapshot();
+
+    expect(reopened.responses.trial_001).toEqual(partial);
+    expect(reopened.outbox).toHaveLength(0);
+  });
 });
