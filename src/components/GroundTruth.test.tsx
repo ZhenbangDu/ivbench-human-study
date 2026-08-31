@@ -40,23 +40,20 @@ describe('activeGroundTruthEvents', () => {
     expect(activeGroundTruthEvents(config, 3.6).map(({ id }) => id)).toEqual(['cta']);
   });
 
-  it('shows overlapping timed text together', () => {
-    expect(activeGroundTruthEvents(config, 1.2).map(({ id }) => id)).toEqual([
-      'headline',
-      'detail',
-    ]);
+  it('advances through text phases without falling back to an earlier message', () => {
+    expect(activeGroundTruthEvents(config, 0.5).map(({ id }) => id)).toEqual(['headline']);
+    expect(activeGroundTruthEvents(config, 1.2).map(({ id }) => id)).toEqual(['detail']);
+    expect(activeGroundTruthEvents(config, 3.1).map(({ id }) => id)).toEqual([]);
+    expect(activeGroundTruthEvents(config, 3.3).map(({ id }) => id)).toEqual(['cta']);
   });
 
-  it('orders visible text by its scheduled start time instead of source array order', () => {
+  it('finds the latest text phase regardless of source array order', () => {
     const unordered = {
       ...config,
       events: [config.events[2], config.events[1], config.events[0]],
     };
 
-    expect(activeGroundTruthEvents(unordered, 1.2).map(({ id }) => id)).toEqual([
-      'headline',
-      'detail',
-    ]);
+    expect(activeGroundTruthEvents(unordered, 1.2).map(({ id }) => id)).toEqual(['detail']);
   });
 
   it('does not replay an entrance animation when timed text changes', () => {
@@ -98,7 +95,14 @@ describe('activeGroundTruthEvents', () => {
   });
 
   it('stacks simultaneous text events that share one layout region', () => {
-    render(<GroundTruth config={config} time={1.2} />);
+    const simultaneous = {
+      ...config,
+      events: [
+        config.events[0],
+        { ...config.events[1], timeStart: config.events[0].timeStart },
+      ],
+    };
+    render(<GroundTruth config={simultaneous} time={1.2} />);
 
     const regions = screen.getAllByTestId('ground-truth-text-region');
     expect(regions).toHaveLength(1);

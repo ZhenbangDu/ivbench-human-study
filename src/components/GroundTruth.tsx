@@ -6,9 +6,28 @@ type GroundTruthProps = {
   time: number;
 };
 
+function eventRegionKey(region: NormalizedRegion | null) {
+  return region
+    ? [region.x, region.y, region.width, region.height].join(':')
+    : 'unconstrained';
+}
+
 export function activeGroundTruthEvents(config: GroundTruthConfig, time: number) {
+  const latestStartByRegion = new Map<string, number>();
+  for (const event of config.events) {
+    if (event.timeStart > time) continue;
+    const key = eventRegionKey(event.region);
+    const latestStart = latestStartByRegion.get(key);
+    if (latestStart === undefined || event.timeStart > latestStart) {
+      latestStartByRegion.set(key, event.timeStart);
+    }
+  }
+
   return config.events
-    .filter((event) => event.timeStart <= time && time < event.timeEnd)
+    .filter((event) => (
+      event.timeStart === latestStartByRegion.get(eventRegionKey(event.region))
+      && time < event.timeEnd
+    ))
     .sort((left, right) => left.timeStart - right.timeStart);
 }
 
@@ -20,7 +39,7 @@ function groupedRegionalEvents(events: GroundTruthConfig['events']) {
 
   for (const event of events) {
     if (!event.region) continue;
-    const key = [event.region.x, event.region.y, event.region.width, event.region.height].join(':');
+    const key = eventRegionKey(event.region);
     const group = groups.get(key) ?? { region: event.region, events: [] };
     group.events.push(event);
     groups.set(key, group);
@@ -66,7 +85,7 @@ export function GroundTruth({ config, time }: GroundTruthProps) {
           <div
             className="gt-region gt-text"
             data-testid="ground-truth-text-region"
-            key={[region.x, region.y, region.width, region.height].join(':')}
+            key={eventRegionKey(region)}
             style={regionStyle(region)}
           >
             {events.map((event) => (
