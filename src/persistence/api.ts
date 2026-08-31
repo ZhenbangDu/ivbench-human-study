@@ -10,6 +10,8 @@ type ServerReply = {
   requestId?: string;
 };
 
+const activeFlushes = new WeakMap<StudyStore, Promise<SyncResult>>();
+
 async function postItem(
   endpoint: string,
   item: OutboxItem,
@@ -25,26 +27,46 @@ async function postItem(
   return reply.ok === true && reply.requestId === item.requestId;
 }
 
-export async function flushOutbox(
+async function drainOutbox(
+  store: StudyStore,
+  endpoint: string,
+  fetcher: typeof fetch,
+): Promise<SyncResult> {
+  let sent = 0;
+  while (store.snapshot().outbox.length > 0) {
+    const pending = store.snapshot().outbox;
+    for (const item of pending) {
+      try {
+        const acknowledged = await postItem(endpoint, item, fetcher);
+        if (!acknowledged) return { sent, remaining: store.snapshot().outbox.length };
+        store.markSynced(item);
+        sent += 1;
+      } catch {
+        return { sent, remaining: store.snapshot().outbox.length };
+      }
+    }
+  }
+
+  return { sent, remaining: store.snapshot().outbox.length };
+}
+
+export function flushOutbox(
   store: StudyStore,
   endpoint: string,
   fetcher: typeof fetch = fetch,
 ): Promise<SyncResult> {
   if (!endpoint.trim()) {
-    return { sent: 0, remaining: store.snapshot().outbox.length };
+    return Promise.resolve({ sent: 0, remaining: store.snapshot().outbox.length });
   }
 
-  let sent = 0;
-  for (const item of store.snapshot().outbox) {
-    try {
-      const acknowledged = await postItem(endpoint, item, fetcher);
-      if (!acknowledged) break;
-      store.markSynced(item.requestId);
-      sent += 1;
-    } catch {
-      break;
-    }
-  }
+  const active = activeFlushes.get(store);
+  if (active) return active;
 
-  return { sent, remaining: store.snapshot().outbox.length };
+  const flush = drainOutbox(store, endpoint, fetcher);
+  activeFlushes.set(store, flush);
+  void flush.then(
+    () => activeFlushes.delete(store),
+    () => activeFlushes.delete(store),
+  );
+  return flush;
 }

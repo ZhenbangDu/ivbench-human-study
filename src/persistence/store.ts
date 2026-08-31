@@ -83,13 +83,19 @@ export class StudyStore {
     this.persist();
   }
 
-  saveResponse(response: TrialResponse) {
+  saveResponse(response: TrialResponse, queueForSync = true) {
     this.state.responses[response.trialId] = response;
-    this.state.outbox = upsertOutbox(this.state.outbox, {
-      requestId: response.requestId,
-      type: 'response',
-      payload: response,
-    });
+    if (queueForSync) {
+      this.state.outbox = upsertOutbox(this.state.outbox, {
+        requestId: response.requestId,
+        type: 'response',
+        payload: response,
+      });
+    } else {
+      this.state.outbox = this.state.outbox.filter(
+        ({ requestId }) => requestId !== response.requestId,
+      );
+    }
     this.persist();
   }
 
@@ -113,8 +119,12 @@ export class StudyStore {
     this.persist();
   }
 
-  markSynced(requestId: string) {
-    this.state.outbox = this.state.outbox.filter((item) => item.requestId !== requestId);
+  markSynced(sentItem: OutboxItem) {
+    const serializedSentItem = JSON.stringify(sentItem);
+    this.state.outbox = this.state.outbox.filter((queuedItem) => (
+      queuedItem.requestId !== sentItem.requestId
+      || JSON.stringify(queuedItem) !== serializedSentItem
+    ));
     this.persist();
   }
 

@@ -92,7 +92,7 @@ describe('StudyStore', () => {
     const store = new StudyStore(storage, 'act-h3-v1');
     store.startSession(session);
     store.saveResponse(response);
-    store.markSynced('session:session-1');
+    store.markSynced(store.snapshot().outbox[0]);
 
     expect(store.snapshot().outbox.map(({ requestId }) => requestId)).toEqual([
       'response:session-1:trial_001',

@@ -136,6 +136,9 @@ export function App({
   const [trialIndex, setTrialIndex] = useState(initial.currentTrialIndex);
   const [syncLabel, setSyncLabel] = useState(endpoint ? 'Ready to sync' : 'Saved on this device');
   const [replayCount, setReplayCount] = useState(0);
+  const autoAdvanceTimerRef = useRef<number | null>(null);
+  const syncRetryTimerRef = useRef<number | null>(null);
+  const synchronizeRef = useRef<() => Promise<void>>(async () => undefined);
   const layout = useDeviceLayout();
   const trial = studyManifest.trials[trialIndex];
   const trialStartRef = useRef(Date.now());
@@ -144,15 +147,35 @@ export function App({
     trial.id,
   );
 
+  const clearSyncRetry = useCallback(() => {
+    if (syncRetryTimerRef.current === null) return;
+    window.clearTimeout(syncRetryTimerRef.current);
+    syncRetryTimerRef.current = null;
+  }, []);
+
   const synchronize = useCallback(async () => {
+    clearSyncRetry();
     if (!endpoint) {
       setSyncLabel('Saved on this device');
       return;
     }
     setSyncLabel('Syncing…');
     const result = await flushOutbox(store, endpoint);
-    setSyncLabel(result.remaining === 0 ? 'Synced' : 'Sync failed — retrying');
-  }, [endpoint, store]);
+    if (result.remaining === 0) {
+      setSyncLabel('Synced');
+      return;
+    }
+
+    setSyncLabel('Sync delayed — saved locally');
+    syncRetryTimerRef.current = window.setTimeout(() => {
+      void synchronizeRef.current();
+    }, 3000);
+  }, [clearSyncRetry, endpoint, store]);
+  synchronizeRef.current = synchronize;
+
+  useEffect(() => {
+    if (store.snapshot().outbox.length > 0) void synchronize();
+  }, [store, synchronize]);
 
   useEffect(() => {
     const retry = () => void synchronize();
@@ -164,6 +187,13 @@ export function App({
     trialStartRef.current = Date.now();
     setReplayCount(0);
   }, [trial.id]);
+
+  useEffect(() => () => {
+    if (autoAdvanceTimerRef.current !== null) {
+      window.clearTimeout(autoAdvanceTimerRef.current);
+    }
+    clearSyncRetry();
+  }, [clearSyncRetry]);
 
   const start = (nickname: string) => {
     const nextSession = createSession(
@@ -180,13 +210,18 @@ export function App({
   if (!session) return <Welcome onStart={start} />;
 
   if (session.status === 'completed') {
+    const resultsSynced = !endpoint || syncLabel === 'Synced';
     return (
       <main className="completion-shell">
         <section className="completion-card">
           <div className="completion-mark">✓</div>
           <div className="eyebrow">STUDY COMPLETE</div>
           <h1>Thank you, {session.displayName}.</h1>
-          <p>Your responses to all 30 comparisons are saved.</p>
+          <p className={resultsSynced ? 'completion-sync-ready' : 'completion-sync-waiting'}>
+            {resultsSynced
+              ? 'All results are synced. You can now close this page.'
+              : 'Please keep this page open while your results sync.'}
+          </p>
           <div className="completion-code"><span>Completion code</span><strong>{session.completionCode}</strong></div>
           <small>{syncLabel}</small>
         </section>
@@ -198,6 +233,30 @@ export function App({
   const labels = choiceLabels(layout);
   const firstPositionLabel = layout === 'portrait' ? 'Top' : 'Left';
   const secondPositionLabel = layout === 'portrait' ? 'Bottom' : 'Right';
+
+  const cancelAutoAdvance = () => {
+    if (autoAdvanceTimerRef.current === null) return;
+    window.clearTimeout(autoAdvanceTimerRef.current);
+    autoAdvanceTimerRef.current = null;
+  };
+
+  const moveTo = (index: number) => {
+    cancelAutoAdvance();
+    const bounded = Math.max(0, Math.min(studyManifest.trials.length - 1, index));
+    store.setCurrentTrialIndex(bounded);
+    setTrialIndex(bounded);
+  };
+
+  const advance = () => {
+    if (trialIndex < studyManifest.trials.length - 1) {
+      moveTo(trialIndex + 1);
+      return;
+    }
+    const code = completionCode(session.sessionId);
+    store.finishSession(code);
+    setSession(store.snapshot().session);
+    void synchronize();
+  };
 
   const choose = (key: QuestionKey, physicalChoice: PhysicalChoice) => {
     const normalized = normalizeChoice(physicalChoice, trial);
@@ -221,27 +280,23 @@ export function App({
       updatedAt: new Date().toISOString(),
       [key]: normalized,
     };
-    store.saveResponse(response);
+    store.saveResponse(response, isComplete(response));
     setResponses(store.snapshot().responses);
-    void synchronize();
-  };
+    if (!isComplete(response)) {
+      setSyncLabel(endpoint ? 'Saved locally' : 'Saved on this device');
+      return;
+    }
 
-  const moveTo = (index: number) => {
-    const bounded = Math.max(0, Math.min(studyManifest.trials.length - 1, index));
-    store.setCurrentTrialIndex(bounded);
-    setTrialIndex(bounded);
+    void synchronize();
+    if (!isComplete(previous)) {
+      cancelAutoAdvance();
+      autoAdvanceTimerRef.current = window.setTimeout(advance, 250);
+    }
   };
 
   const next = () => {
     if (!isComplete(currentResponse)) return;
-    if (trialIndex < studyManifest.trials.length - 1) {
-      moveTo(trialIndex + 1);
-      return;
-    }
-    const code = completionCode(session.sessionId);
-    store.finishSession(code);
-    setSession(store.snapshot().session);
-    void synchronize();
+    advance();
   };
 
   const replayAll = () => {
@@ -256,6 +311,8 @@ export function App({
     if (!confirmed) return;
 
     store.reset();
+    cancelAutoAdvance();
+    clearSyncRetry();
     setSession(null);
     setResponses({});
     setTrialIndex(0);
