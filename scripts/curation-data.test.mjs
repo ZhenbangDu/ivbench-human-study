@@ -1,3 +1,6 @@
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+
 import { describe, expect, it } from 'vitest'
 
 import { loadCuratorConfig } from './curation-config.mjs'
@@ -6,6 +9,8 @@ import {
   convertBriefToGroundTruth,
   naturalSampleCompare,
 } from './curation-data.mjs'
+
+const privateDatasetTest = existsSync(path.resolve('.curation/config.json')) ? it : it.skip
 
 describe('curation data', () => {
   it('sorts IDs by subtask and numeric suffix', () => {
@@ -54,7 +59,7 @@ describe('curation data', () => {
     expect(groundTruth.events[0].region).toBeNull()
   })
 
-  it('builds 200 items with 198 complete pairs from the configured dataset', async () => {
+  privateDatasetTest('builds 200 items with 198 complete pairs from the configured dataset', async () => {
     const items = await buildCuratorItems(loadCuratorConfig())
 
     expect(items).toHaveLength(200)
