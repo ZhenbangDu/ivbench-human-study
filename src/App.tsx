@@ -249,6 +249,20 @@ export function App({
     replay();
   };
 
+  const startOver = () => {
+    const confirmed = window.confirm(
+      'Start over? This clears the nickname and all progress saved on this device. Responses already synced to the study database will remain there.',
+    );
+    if (!confirmed) return;
+
+    store.reset();
+    setSession(null);
+    setResponses({});
+    setTrialIndex(0);
+    setReplayCount(0);
+    setSyncLabel(endpoint ? 'Ready to sync' : 'Saved on this device');
+  };
+
   return (
     <main className="study-shell">
       <header className="study-header">
@@ -262,6 +276,10 @@ export function App({
         <div className="header-actions">
           <span className="participant-chip">{session.displayName}</span>
           <span className="save-state">{syncLabel}</span>
+          <button className="secondary-button reset-button" type="button" aria-label="Start over" onClick={startOver}>
+            <span className="reset-label-full">Start over</span>
+            <span className="reset-label-compact" aria-hidden="true">Reset</span>
+          </button>
           <button className="secondary-button" type="button" onClick={toggle}>{playing ? 'Pause' : 'Play'}</button>
           <button className="secondary-button" type="button" onClick={replayAll}>Replay</button>
           <button className="next-button" type="button" disabled={!isComplete(currentResponse)} onClick={next}>

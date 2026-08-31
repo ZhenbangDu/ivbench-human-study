@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { App, choiceLabels } from './App';
 import type { StorageLike } from './persistence/store';
 
@@ -8,6 +8,7 @@ class MemoryStorage implements StorageLike {
   private values = new Map<string, string>();
   getItem(key: string) { return this.values.get(key) ?? null; }
   setItem(key: string, value: string) { this.values.set(key, value); }
+  removeItem(key: string) { this.values.delete(key); }
 }
 
 const appProps = {
@@ -59,6 +60,34 @@ describe('App', () => {
     expect(screen.getByText('Which video makes the information easier to read and understand?')).toBeInTheDocument();
     expect(screen.getByText('Which video puts the text in a better place?')).toBeInTheDocument();
     expect(screen.getByText('Which video looks better overall?')).toBeInTheDocument();
+  });
+
+  it('clears local study progress and returns to the welcome screen after confirmation', async () => {
+    const storage = new MemoryStorage();
+    const user = userEvent.setup();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    render(<App {...appProps} storage={storage} />);
+
+    await user.click(screen.getByRole('button', { name: /start study/i }));
+    expect(storage.getItem('ivbench-human-study:act-h3-v1')).not.toBeNull();
+
+    await user.click(screen.getByRole('button', { name: /start over/i }));
+
+    expect(screen.getByRole('button', { name: /start study/i })).toBeInTheDocument();
+    expect(storage.getItem('ivbench-human-study:act-h3-v1')).toBeNull();
+  });
+
+  it('keeps the current study when start over is cancelled', async () => {
+    const storage = new MemoryStorage();
+    const user = userEvent.setup();
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    render(<App {...appProps} storage={storage} />);
+
+    await user.click(screen.getByRole('button', { name: /start study/i }));
+    await user.click(screen.getByRole('button', { name: /start over/i }));
+
+    expect(screen.getByText('1 / 30')).toBeInTheDocument();
+    expect(storage.getItem('ivbench-human-study:act-h3-v1')).not.toBeNull();
   });
 });
 

@@ -47,6 +47,9 @@ button { -webkit-tap-highlight-color: transparent; }
 .icon-button { width: 44px; padding: 0; font-size: 20px; }
 .icon-button:disabled, .next-button:disabled { opacity: .36; cursor: not-allowed; }
 .secondary-button:hover, .icon-button:not(:disabled):hover { border-color: #9ca9bc; }
+.reset-button { color: #8f3940; border-color: #e4c9cc; }
+.reset-button:hover { color: #762b32; border-color: #c99298; background: #fffafa; }
+.reset-label-compact { display: none; }
 
 .progress-area { display: flex; align-items: center; gap: 16px; flex: 1; }
 .progress-track { height: 7px; background: #e3e7ed; border-radius: 999px; overflow: hidden; flex: 1; }
@@ -153,6 +156,8 @@ button { -webkit-tap-highlight-color: transparent; }
   .progress-count { font-size: 12px; }
   .header-actions { gap: 6px; }
   .secondary-button { min-height: 36px; padding: 0 10px; font-size: 12px; }
+  .reset-label-full { display: none; }
+  .reset-label-compact { display: inline; }
   .next-button { min-height: 36px; padding: 0 11px; font-size: 12px; }
   .icon-button { min-height: 36px; width: 36px; }
   .media-grid { display: flex; flex-direction: column; gap: 13px; }

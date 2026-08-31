@@ -12,6 +12,10 @@ class MemoryStorage implements StorageLike {
   setItem(key: string, value: string) {
     this.values.set(key, value);
   }
+
+  removeItem(key: string) {
+    this.values.delete(key);
+  }
 }
 
 const session: ParticipantSession = {

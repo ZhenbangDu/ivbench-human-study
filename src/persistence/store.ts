@@ -39,6 +39,7 @@ type StudyState = {
 export interface StorageLike {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
+  removeItem(key: string): void;
 }
 
 function initialState(studyVersion: string): StudyState {
@@ -115,6 +116,12 @@ export class StudyStore {
   markSynced(requestId: string) {
     this.state.outbox = this.state.outbox.filter((item) => item.requestId !== requestId);
     this.persist();
+  }
+
+  reset() {
+    const studyVersion = this.state.studyVersion;
+    this.state = initialState(studyVersion);
+    this.storage.removeItem(this.key);
   }
 
   private load(studyVersion: string): StudyState {
