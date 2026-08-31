@@ -47,6 +47,41 @@ describe('activeGroundTruthEvents', () => {
     ]);
   });
 
+  it('orders visible text by its scheduled start time instead of source array order', () => {
+    const unordered = {
+      ...config,
+      events: [config.events[2], config.events[1], config.events[0]],
+    };
+
+    expect(activeGroundTruthEvents(unordered, 1.2).map(({ id }) => id)).toEqual([
+      'headline',
+      'detail',
+    ]);
+  });
+
+  it('does not replay an entrance animation when timed text changes', () => {
+    render(<GroundTruth config={config} time={1.2} />);
+
+    expect(getComputedStyle(screen.getByTestId('ground-truth-text-region')).animation)
+      .not.toContain('gt-in');
+  });
+
+  it('keeps a layout region mounted while its timed message changes', () => {
+    const sequential = {
+      ...config,
+      events: [
+        { ...config.events[0], id: 'first', timeStart: 0, timeEnd: 1 },
+        { ...config.events[0], id: 'second', timeStart: 1, timeEnd: 2 },
+      ],
+    };
+    const { rerender } = render(<GroundTruth config={sequential} time={0.5} />);
+    const originalRegion = screen.getByTestId('ground-truth-text-region');
+
+    rerender(<GroundTruth config={sequential} time={1.5} />);
+
+    expect(screen.getByTestId('ground-truth-text-region')).toBe(originalRegion);
+  });
+
   it('uses readable type sizes for the reference labels', () => {
     render(<GroundTruth config={config} time={1.2} />);
 

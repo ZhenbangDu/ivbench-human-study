@@ -7,9 +7,9 @@ type GroundTruthProps = {
 };
 
 export function activeGroundTruthEvents(config: GroundTruthConfig, time: number) {
-  return config.events.filter(
-    (event) => event.timeStart <= time && time < event.timeEnd,
-  );
+  return config.events
+    .filter((event) => event.timeStart <= time && time < event.timeEnd)
+    .sort((left, right) => left.timeStart - right.timeStart);
 }
 
 function groupedRegionalEvents(events: GroundTruthConfig['events']) {
@@ -66,7 +66,7 @@ export function GroundTruth({ config, time }: GroundTruthProps) {
           <div
             className="gt-region gt-text"
             data-testid="ground-truth-text-region"
-            key={events.map(({ id }) => id).join(':')}
+            key={[region.x, region.y, region.width, region.height].join(':')}
             style={regionStyle(region)}
           >
             {events.map((event) => (

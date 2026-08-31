@@ -101,11 +101,10 @@ button { -webkit-tap-highlight-color: transparent; }
 .gt-region { position: absolute; display: flex; align-items: center; justify-content: center; min-width: 0; overflow: hidden; border-radius: 5px; padding: 6px; text-align: center; }
 .gt-region span { display: block; max-width: 100%; overflow: hidden; }
 .gt-subject { border: 2px solid #5b89d6; background: rgba(78, 128, 210, .12); color: #3164b6; font-size: 12px; font-weight: 900; letter-spacing: .07em; }
-.gt-text { flex-direction: column; gap: 4px; border: 2px solid #e18a48; background: rgba(255, 247, 237, .94); color: #8b4618; font-size: 11px; font-weight: 800; line-height: 1.15; padding: 5px; animation: gt-in .16s ease-out; }
+.gt-text { flex-direction: column; gap: 4px; border: 2px solid #e18a48; background: rgba(255, 247, 237, .94); color: #8b4618; font-size: 11px; font-weight: 800; line-height: 1.15; padding: 5px; }
 .gt-text span { white-space: normal; overflow-wrap: anywhere; }
 .gt-unconstrained { position: absolute; inset: 0; display: grid; place-items: center; color: #657386; font-size: 12px; font-weight: 800; letter-spacing: .08em; }
 .gt-unconstrained-text { position: relative; z-index: 1; width: fit-content; max-width: 88%; margin: 8px auto 0; overflow: hidden; border: 2px solid #e18a48; border-radius: 5px; background: rgba(255, 247, 237, .94); color: #8b4618; padding: 5px 8px; font-size: 11px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; text-align: center; }
-@keyframes gt-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
 .gt-timecode { position: absolute; right: 5px; bottom: 4px; color: #526172; background: rgba(255,255,255,.86); border-radius: 4px; padding: 2px 4px; font-size: 10px; font-variant-numeric: tabular-nums; }
 .gt-timeline { height: 4px; background: #e2e7ee; border-radius: 99px; overflow: hidden; margin: 8px 2px 0; }
 .gt-timeline span { display: block; height: 100%; background: #3972d9; }
