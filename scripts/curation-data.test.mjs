@@ -64,9 +64,15 @@ describe('curation data', () => {
       'travel_06',
     ])
     expect(items.filter((item) => !item.availability.h3)).toHaveLength(0)
-    expect(items.filter((item) => item.availability.repairedAct)).toHaveLength(30)
+    expect(items.filter((item) => item.availability.repairedAct)).toHaveLength(32)
     expect(items.find(({ id }) => id === 'advertisement_07').mediaPaths.repairedAct)
-      .toContain('human_study_repair_no_progress_dots_v2_20260830/run/rendered/advertisement_07/final.mp4')
+      .toContain('human_study_comment_repair_v5_quality_20260831/run/rendered/advertisement_07/final.mp4')
+    expect(items.find(({ id }) => id === 'fun_facts_28').mediaPaths.repairedAct)
+      .toContain('human_study_comment_repair_v5_quality_20260831/run/rendered/fun_facts_28/final.mp4')
+    expect(items.find(({ id }) => id === 'language_17').mediaPaths.repairedAct)
+      .toContain('human_study_comment_repair_v5_quality_20260831/run/rendered/language_17/final.mp4')
+    expect(items.find(({ id }) => id === 'nature_intro_16').mediaPaths.repairedAct)
+      .toContain('human_study_comment_repair_v5_quality_20260831/run/rendered/nature_intro_16/final.mp4')
     expect(items.find(({ id }) => id === 'advertisement_01').mediaPaths.repairedAct).toBeNull()
     expect(items.find(({ id }) => id === 'fitness_03').mediaPaths.h3).toContain('h3__fit10_t2vfb')
     expect(items.find(({ id }) => id === 'advertisement_01').groundTruth.canvas).toEqual({

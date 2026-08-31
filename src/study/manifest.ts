@@ -1,72 +1,7 @@
-import type {
-  GroundTruthConfig,
-  NormalizedRegion,
-  StudyManifest,
-} from './types';
+import manifestData from './manifest-data.json';
+import type { NormalizedRegion, StudyManifest } from './types';
 
-const leftSubject: NormalizedRegion = {
-  x: 0.06,
-  y: 0.16,
-  width: 0.47,
-  height: 0.7,
-};
-
-const rightSubject: NormalizedRegion = {
-  x: 0.47,
-  y: 0.16,
-  width: 0.47,
-  height: 0.7,
-};
-
-function groundTruthFor(index: number): GroundTruthConfig {
-  const subjectOnRight = index % 2 === 1;
-  const textX = subjectOnRight ? 0.07 : 0.57;
-
-  return {
-    durationSeconds: 5,
-    canvas: { width: 16, height: 9 },
-    subjectRegion: { ...(subjectOnRight ? rightSubject : leftSubject) },
-    events: [
-      {
-        id: 'headline',
-        text: 'Primary message',
-        timeStart: 0.3,
-        timeEnd: 3.6,
-        region: { x: textX, y: 0.2, width: 0.38, height: 0.2 },
-      },
-      {
-        id: 'detail',
-        text: 'Supporting text',
-        timeStart: 1,
-        timeEnd: 3,
-        region: { x: textX, y: 0.47, width: 0.36, height: 0.15 },
-      },
-      {
-        id: 'cta',
-        text: 'Call to action',
-        timeStart: 3.2,
-        timeEnd: 5,
-        region: { x: textX, y: 0.68, width: 0.32, height: 0.13 },
-      },
-    ],
-  };
-}
-
-export const studyManifest: StudyManifest = {
-  studyVersion: 'act-h3-v1',
-  title: 'Video Comparison Study',
-  trials: Array.from({ length: 30 }, (_, index) => {
-    const number = index + 1;
-    const item = String(number).padStart(3, '0');
-    return {
-      id: `trial_${item}`,
-      itemId: `item_${item}`,
-      first: { code: `v${item}a`, src: null },
-      second: { code: `v${item}b`, src: null },
-      groundTruth: groundTruthFor(number),
-    };
-  }),
-};
+export const studyManifest = manifestData as StudyManifest;
 
 function regionError(region: NormalizedRegion | null): boolean {
   if (region === null) return false;

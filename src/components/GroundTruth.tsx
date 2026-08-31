@@ -12,6 +12,22 @@ export function activeGroundTruthEvents(config: GroundTruthConfig, time: number)
   );
 }
 
+function groupedRegionalEvents(events: GroundTruthConfig['events']) {
+  const groups = new Map<string, {
+    region: NormalizedRegion;
+    events: GroundTruthConfig['events'];
+  }>();
+
+  for (const event of events) {
+    if (!event.region) continue;
+    const key = [event.region.x, event.region.y, event.region.width, event.region.height].join(':');
+    const group = groups.get(key) ?? { region: event.region, events: [] };
+    group.events.push(event);
+    groups.set(key, group);
+  }
+  return [...groups.values()];
+}
+
 function regionStyle(region: NormalizedRegion): CSSProperties {
   return {
     left: `${region.x * 100}%`,
@@ -23,6 +39,8 @@ function regionStyle(region: NormalizedRegion): CSSProperties {
 
 export function GroundTruth({ config, time }: GroundTruthProps) {
   const activeEvents = activeGroundTruthEvents(config, time);
+  const regionalEvents = groupedRegionalEvents(activeEvents);
+  const unconstrainedEvents = activeEvents.filter((event) => event.region === null);
   const progress = Math.min(100, Math.max(0, (time / config.durationSeconds) * 100));
 
   return (
@@ -44,18 +62,22 @@ export function GroundTruth({ config, time }: GroundTruthProps) {
         ) : (
           <div className="gt-unconstrained">UNCONSTRAINED</div>
         )}
-        {activeEvents.map((event) => (
-          event.region ? (
-            <div
-              className="gt-region gt-text"
-              key={event.id}
-              style={regionStyle(event.region)}
-            >
-              <span style={{ whiteSpace: 'nowrap', fontSize: '7px' }}>{event.text}</span>
-            </div>
-          ) : (
-            <div className="gt-unconstrained-text" key={event.id}>{event.text}</div>
-          )
+        {regionalEvents.map(({ region, events }) => (
+          <div
+            className="gt-region gt-text"
+            data-testid="ground-truth-text-region"
+            key={events.map(({ id }) => id).join(':')}
+            style={regionStyle(region)}
+          >
+            {events.map((event) => (
+              <span key={event.id} style={{ whiteSpace: 'nowrap', fontSize: '7px' }}>
+                {event.text}
+              </span>
+            ))}
+          </div>
+        ))}
+        {unconstrainedEvents.map((event) => (
+          <div className="gt-unconstrained-text" key={event.id}>{event.text}</div>
         ))}
         <div className="gt-timecode">{time.toFixed(1)}s</div>
       </div>

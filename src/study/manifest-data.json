@@ -1,0 +1,1793 @@
+{
+  "studyVersion": "act-h3-v1",
+  "title": "Video Comparison Study",
+  "trials": [
+    {
+      "id": "trial_001",
+      "itemId": "sample_001",
+      "first": {
+        "code": "v001a",
+        "src": "media/trial_001_a.mp4"
+      },
+      "second": {
+        "code": "v001b",
+        "src": "media/trial_001_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.333,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Soft Glow, Tiny Footprint",
+            "timeStart": 0.3,
+            "timeEnd": 3.6,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "callout_1",
+            "text": "Matte Finish",
+            "timeStart": 1,
+            "timeEnd": 3,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "cta",
+            "text": "Illuminate Your Space",
+            "timeStart": 3.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_002",
+      "itemId": "sample_002",
+      "first": {
+        "code": "v002a",
+        "src": "media/trial_002_a.mp4"
+      },
+      "second": {
+        "code": "v002b",
+        "src": "media/trial_002_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.333,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Smooth, Quiet Motion",
+            "timeStart": 0.3,
+            "timeEnd": 3.6,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "callout_1",
+            "text": "7 kg Flywheel",
+            "timeStart": 1,
+            "timeEnd": 3,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "cta",
+            "text": "Train With Confidence",
+            "timeStart": 3.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_003",
+      "itemId": "sample_003",
+      "first": {
+        "code": "v003a",
+        "src": "media/trial_003_a.mp4"
+      },
+      "second": {
+        "code": "v003b",
+        "src": "media/trial_003_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Garden Care, Simplified",
+            "timeStart": 0.3,
+            "timeEnd": 3.6,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "cta",
+            "text": "Elevate Your Garden",
+            "timeStart": 3.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_004",
+      "itemId": "sample_004",
+      "first": {
+        "code": "v004a",
+        "src": "media/trial_004_a.mp4"
+      },
+      "second": {
+        "code": "v004b",
+        "src": "media/trial_004_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Slow Cooked, Deep Flavor",
+            "timeStart": 0.3,
+            "timeEnd": 3.6,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Heavy Base",
+            "timeStart": 1,
+            "timeEnd": 3,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line2",
+            "text": "Bring It To Table",
+            "timeStart": 3.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_005",
+      "itemId": "sample_005",
+      "first": {
+        "code": "v005a",
+        "src": "media/trial_005_a.mp4"
+      },
+      "second": {
+        "code": "v005b",
+        "src": "media/trial_005_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Carry It Everywhere",
+            "timeStart": 0.3,
+            "timeEnd": 2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Leather Handles",
+            "timeStart": 2.1,
+            "timeEnd": 3.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line2",
+            "text": "Fill Your Tote",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_006",
+      "itemId": "sample_006",
+      "first": {
+        "code": "v006a",
+        "src": "media/trial_006_a.mp4"
+      },
+      "second": {
+        "code": "v006b",
+        "src": "media/trial_006_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.36,
+          "y": 0,
+          "width": 0.64,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "George Washington",
+            "timeStart": 0.5,
+            "timeEnd": 2.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.36,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "The first president of the United States",
+            "timeStart": 2.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.36,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_007",
+      "itemId": "sample_007",
+      "first": {
+        "code": "v007a",
+        "src": "media/trial_007_a.mp4"
+      },
+      "second": {
+        "code": "v007b",
+        "src": "media/trial_007_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt1",
+            "text": "Dry-cure rub",
+            "timeStart": 0,
+            "timeEnd": 1.4,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt2",
+            "text": "Massage the salt-spice rub over every surface into a tacky crust",
+            "timeStart": 1.4,
+            "timeEnd": 3.6,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt3",
+            "text": "Done when no bare red patches remain",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_008",
+      "itemId": "sample_008",
+      "first": {
+        "code": "v008a",
+        "src": "media/trial_008_a.mp4"
+      },
+      "second": {
+        "code": "v008b",
+        "src": "media/trial_008_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt1_label_toum",
+            "text": "Emulsify (toum)",
+            "timeStart": 0,
+            "timeEnd": 1.2,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt2_state_cue",
+            "text": "Drizzle oil in a thin steady stream while whipping",
+            "timeStart": 1.2,
+            "timeEnd": 2.9,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt3_doneness_cue",
+            "text": "Light, fluffy and bright white",
+            "timeStart": 2.9,
+            "timeEnd": 4,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt4_break_warning",
+            "text": "Too-fast oil breaks it",
+            "timeStart": 4,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_009",
+      "itemId": "sample_009",
+      "first": {
+        "code": "v009a",
+        "src": "media/trial_009_a.mp4"
+      },
+      "second": {
+        "code": "v009b",
+        "src": "media/trial_009_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Confit",
+            "timeStart": 0.4,
+            "timeEnd": 2.2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Fat stays barely trembling, never boiling",
+            "timeStart": 2.3,
+            "timeEnd": 4,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line2",
+            "text": "Done when the meat pulls from the bone",
+            "timeStart": 4.1,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_010",
+      "itemId": "sample_010",
+      "first": {
+        "code": "v010a",
+        "src": "media/trial_010_a.mp4"
+      },
+      "second": {
+        "code": "v010b",
+        "src": "media/trial_010_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.333,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Harvest the sea breeze",
+            "timeStart": 0.4,
+            "timeEnd": 1.6,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Turbines out at sea",
+            "timeStart": 1.7,
+            "timeEnd": 2.9,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_3",
+            "text": "Wind over open water",
+            "timeStart": 3,
+            "timeEnd": 4.1,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_4",
+            "text": "Clean power from sea breezes",
+            "timeStart": 4.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_011",
+      "itemId": "sample_011",
+      "first": {
+        "code": "v011a",
+        "src": "media/trial_011_a.mp4"
+      },
+      "second": {
+        "code": "v011b",
+        "src": "media/trial_011_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0.5,
+          "width": 1,
+          "height": 0.5
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Protect our pollinators",
+            "timeStart": 0.5,
+            "timeEnd": 2.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Butterflies need blooms",
+            "timeStart": 2.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_012",
+      "itemId": "sample_012",
+      "first": {
+        "code": "v012a",
+        "src": "media/trial_012_a.mp4"
+      },
+      "second": {
+        "code": "v012b",
+        "src": "media/trial_012_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0.5,
+          "width": 1,
+          "height": 0.5
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Flatten and recycle",
+            "timeStart": 0.5,
+            "timeEnd": 2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Flat boxes stack and ship easily",
+            "timeStart": 2.1,
+            "timeEnd": 3.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          },
+          {
+            "id": "line2",
+            "text": "Reuse the box",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_013",
+      "itemId": "sample_013",
+      "first": {
+        "code": "v013a",
+        "src": "media/trial_013_a.mp4"
+      },
+      "second": {
+        "code": "v013b",
+        "src": "media/trial_013_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.4,
+          "y": 0,
+          "width": 0.6,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Bees help plants grow",
+            "timeStart": 0.5,
+            "timeEnd": 2.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.4,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Bees carry pollen between blooms",
+            "timeStart": 2.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.4,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_014",
+      "itemId": "sample_014",
+      "first": {
+        "code": "v014a",
+        "src": "media/trial_014_a.mp4"
+      },
+      "second": {
+        "code": "v014b",
+        "src": "media/trial_014_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Did you know?",
+            "timeStart": 0.4,
+            "timeEnd": 1.6,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Vanilla comes from an orchid",
+            "timeStart": 1.7,
+            "timeEnd": 2.9,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_3",
+            "text": "Its flowers are hand-pollinated",
+            "timeStart": 3,
+            "timeEnd": 4.1,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_4",
+            "text": "Prized for its sweet aroma",
+            "timeStart": 4.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_015",
+      "itemId": "sample_015",
+      "first": {
+        "code": "v015a",
+        "src": "media/trial_015_a.mp4"
+      },
+      "second": {
+        "code": "v015b",
+        "src": "media/trial_015_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Space trivia",
+            "timeStart": 0.4,
+            "timeEnd": 1.6,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Less dense than water",
+            "timeStart": 1.7,
+            "timeEnd": 2.9,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_3",
+            "text": "0.687 vs 1.0 g/cm3",
+            "timeStart": 3,
+            "timeEnd": 4.1,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_4",
+            "text": "The least dense planet",
+            "timeStart": 4.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_016",
+      "itemId": "sample_016",
+      "first": {
+        "code": "v016a",
+        "src": "media/trial_016_a.mp4"
+      },
+      "second": {
+        "code": "v016b",
+        "src": "media/trial_016_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0.333,
+          "width": 1,
+          "height": 0.667
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Did you know?",
+            "timeStart": 0.5,
+            "timeEnd": 2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Chocolate comes from a fruit seed",
+            "timeStart": 2.1,
+            "timeEnd": 3.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          },
+          {
+            "id": "evt_3",
+            "text": "It starts as beans inside a cacao pod",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_017",
+      "itemId": "sample_017",
+      "first": {
+        "code": "v017a",
+        "src": "media/trial_017_a.mp4"
+      },
+      "second": {
+        "code": "v017b",
+        "src": "media/trial_017_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Bird trivia",
+            "timeStart": 0.5,
+            "timeEnd": 2,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "A group of flamingos is a flamboyance",
+            "timeStart": 2.1,
+            "timeEnd": 3.5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line2",
+            "text": "Their food makes them pink",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_018",
+      "itemId": "sample_018",
+      "first": {
+        "code": "v018a",
+        "src": "media/trial_018_a.mp4"
+      },
+      "second": {
+        "code": "v018b",
+        "src": "media/trial_018_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": null,
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "El Castillo",
+            "timeStart": 0.5,
+            "timeEnd": 2.5,
+            "region": null
+          },
+          {
+            "id": "evt_2",
+            "text": "A temple of the ancient Maya",
+            "timeStart": 2.6,
+            "timeEnd": 5,
+            "region": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_019",
+      "itemId": "sample_019",
+      "first": {
+        "code": "v019a",
+        "src": "media/trial_019_a.mp4"
+      },
+      "second": {
+        "code": "v019b",
+        "src": "media/trial_019_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt1",
+            "text": "Learn a Color in Portuguese",
+            "timeStart": 0,
+            "timeEnd": 1.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt2",
+            "text": "Azul = Blue",
+            "timeStart": 1.5,
+            "timeEnd": 3.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt3",
+            "text": "Azul",
+            "timeStart": 3.5,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_020",
+      "itemId": "sample_020",
+      "first": {
+        "code": "v020a",
+        "src": "media/trial_020_a.mp4"
+      },
+      "second": {
+        "code": "v020b",
+        "src": "media/trial_020_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt_fr_cafe",
+            "text": "Cafe = Coffee (French)",
+            "timeStart": 0.3,
+            "timeEnd": 1.5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_it_caffe",
+            "text": "Caffe = Coffee (Italian)",
+            "timeStart": 1.5,
+            "timeEnd": 2.8,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_de_kaffee",
+            "text": "Kaffee = Coffee (German)",
+            "timeStart": 2.8,
+            "timeEnd": 4,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_tr_kahve",
+            "text": "Kahve = Coffee (Turkish)",
+            "timeStart": 4,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_021",
+      "itemId": "sample_021",
+      "first": {
+        "code": "v021a",
+        "src": "media/trial_021_a.mp4"
+      },
+      "second": {
+        "code": "v021b",
+        "src": "media/trial_021_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0.333,
+          "width": 1,
+          "height": 0.667
+        },
+        "events": [
+          {
+            "id": "evt1",
+            "text": "French Food Words",
+            "timeStart": 0,
+            "timeEnd": 1.2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          },
+          {
+            "id": "evt2",
+            "text": "Poisson = Fish",
+            "timeStart": 1.2,
+            "timeEnd": 2.9,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          },
+          {
+            "id": "evt3",
+            "text": "Citron = Lemon",
+            "timeStart": 2.9,
+            "timeEnd": 4.2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          },
+          {
+            "id": "evt4",
+            "text": "One plate, two words",
+            "timeStart": 4.2,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.333
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_022",
+      "itemId": "sample_022",
+      "first": {
+        "code": "v022a",
+        "src": "media/trial_022_a.mp4"
+      },
+      "second": {
+        "code": "v022b",
+        "src": "media/trial_022_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Sunflower",
+            "timeStart": 0.5,
+            "timeEnd": 2.5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Young ones follow the sun",
+            "timeStart": 2.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.5,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_023",
+      "itemId": "sample_023",
+      "first": {
+        "code": "v023a",
+        "src": "media/trial_023_a.mp4"
+      },
+      "second": {
+        "code": "v023b",
+        "src": "media/trial_023_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Flamingo",
+            "timeStart": 0.3,
+            "timeEnd": 2.4,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Feeds with its head upside down",
+            "timeStart": 2.5,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_024",
+      "itemId": "sample_024",
+      "first": {
+        "code": "v024a",
+        "src": "media/trial_024_a.mp4"
+      },
+      "second": {
+        "code": "v024b",
+        "src": "media/trial_024_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0,
+          "width": 0.667,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Hedgehog",
+            "timeStart": 0.3,
+            "timeEnd": 2.4,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Rolls into a ball of spines",
+            "timeStart": 2.5,
+            "timeEnd": 5,
+            "region": {
+              "x": 0.667,
+              "y": 0,
+              "width": 0.333,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_025",
+      "itemId": "sample_025",
+      "first": {
+        "code": "v025a",
+        "src": "media/trial_025_a.mp4"
+      },
+      "second": {
+        "code": "v025b",
+        "src": "media/trial_025_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Snail",
+            "timeStart": 0.3,
+            "timeEnd": 2.4,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Carries its shell as shelter",
+            "timeStart": 2.5,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_026",
+      "itemId": "sample_026",
+      "first": {
+        "code": "v026a",
+        "src": "media/trial_026_a.mp4"
+      },
+      "second": {
+        "code": "v026b",
+        "src": "media/trial_026_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0.5,
+          "width": 1,
+          "height": 0.5
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "REMOVE THE LID BEFORE HEATING",
+            "timeStart": 0,
+            "timeEnd": 2.4,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          },
+          {
+            "id": "line1",
+            "text": "Open the jar first",
+            "timeStart": 2.4,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_027",
+      "itemId": "sample_027",
+      "first": {
+        "code": "v027a",
+        "src": "media/trial_027_a.mp4"
+      },
+      "second": {
+        "code": "v027b",
+        "src": "media/trial_027_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": null,
+        "events": [
+          {
+            "id": "evt_tornado_headline",
+            "text": "Tornado",
+            "timeStart": 0.3,
+            "timeEnd": 2,
+            "region": null
+          },
+          {
+            "id": "evt_funnel_cloud_label",
+            "text": "Funnel cloud",
+            "timeStart": 2.1,
+            "timeEnd": 3.5,
+            "region": null
+          },
+          {
+            "id": "evt_rotating_winds_label",
+            "text": "Rotating winds",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_028",
+      "itemId": "sample_028",
+      "first": {
+        "code": "v028a",
+        "src": "media/trial_028_a.mp4"
+      },
+      "second": {
+        "code": "v028b",
+        "src": "media/trial_028_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0.5,
+          "y": 0,
+          "width": 0.5,
+          "height": 1
+        },
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Viscous drag",
+            "timeStart": 0.5,
+            "timeEnd": 2.5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          },
+          {
+            "id": "evt_2",
+            "text": "Terminal velocity",
+            "timeStart": 2.6,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 0.5,
+              "height": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_029",
+      "itemId": "sample_029",
+      "first": {
+        "code": "v029a",
+        "src": "media/trial_029_a.mp4"
+      },
+      "second": {
+        "code": "v029b",
+        "src": "media/trial_029_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": {
+          "x": 0,
+          "y": 0.42,
+          "width": 1,
+          "height": 0.58
+        },
+        "events": [
+          {
+            "id": "headline",
+            "text": "Paper chromatography",
+            "timeStart": 0,
+            "timeEnd": 1.2,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.42
+            }
+          },
+          {
+            "id": "line1",
+            "text": "This ink contains several dyes",
+            "timeStart": 1.2,
+            "timeEnd": 2.6,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.42
+            }
+          },
+          {
+            "id": "line2",
+            "text": "The colors separate as they climb",
+            "timeStart": 2.6,
+            "timeEnd": 4,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.42
+            }
+          },
+          {
+            "id": "line3",
+            "text": "Each dye travels its own distance",
+            "timeStart": 4,
+            "timeEnd": 5,
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1,
+              "height": 0.42
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trial_030",
+      "itemId": "sample_030",
+      "first": {
+        "code": "v030a",
+        "src": "media/trial_030_a.mp4"
+      },
+      "second": {
+        "code": "v030b",
+        "src": "media/trial_030_b.mp4"
+      },
+      "groundTruth": {
+        "durationSeconds": 5,
+        "canvas": {
+          "width": 832,
+          "height": 480
+        },
+        "subjectRegion": null,
+        "events": [
+          {
+            "id": "evt_1",
+            "text": "Stonehenge",
+            "timeStart": 0.5,
+            "timeEnd": 2,
+            "region": null
+          },
+          {
+            "id": "evt_2",
+            "text": "A prehistoric stone circle in England",
+            "timeStart": 2.1,
+            "timeEnd": 3.5,
+            "region": null
+          },
+          {
+            "id": "evt_3",
+            "text": "Soft daylight brings out the stone",
+            "timeStart": 3.6,
+            "timeEnd": 5,
+            "region": null
+          }
+        ]
+      }
+    }
+  ]
+}

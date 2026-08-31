@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "curate": "node scripts/curation-server.mjs",
+    "export:study": "node scripts/formal-study-export.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",

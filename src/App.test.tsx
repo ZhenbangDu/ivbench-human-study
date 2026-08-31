@@ -29,7 +29,14 @@ describe('App', () => {
 
     expect(screen.getByText('1 / 30')).toBeInTheDocument();
     expect(screen.getByText('Ground Truth')).toBeInTheDocument();
-    expect(screen.getAllByText('Video not added yet')).toHaveLength(2);
+    expect(screen.getByLabelText('Left candidate video').querySelector('video')).toHaveAttribute(
+      'src',
+      'media/trial_001_a.mp4',
+    );
+    expect(screen.getByLabelText('Right candidate video').querySelector('video')).toHaveAttribute(
+      'src',
+      'media/trial_001_b.mp4',
+    );
     expect(screen.getByText('Participant-174000')).toBeInTheDocument();
   });
 

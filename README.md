@@ -1,6 +1,6 @@
 # Video Comparison Human Study
 
-A responsive, method-blind interface for a fixed 30-trial pairwise video study. Candidate videos are intentionally not included yet; the current deployment is ready for layout review and Ground Truth configuration.
+A responsive, method-blind interface for a fixed 30-trial ACT versus MiniMax H3 video study. The formal study bundle contains the selected anonymous video pairs and their IVBench Ground Truth layout/timing references.
 
 ## What is ready
 
@@ -12,6 +12,7 @@ A responsive, method-blind interface for a fixed 30-trial pairwise video study. 
 - Local save before every network attempt, partial-session resume, and retry outbox
 - Google Apps Script receiver for a private Google Sheet
 - GitHub Pages deployment workflow
+- 60 neutral media files with a fixed, balanced 15/15 first-position assignment
 
 ## Local development
 
@@ -54,12 +55,15 @@ Selections are stored atomically in `.curation/act-h3-selection.json`. They surv
 
 If the source locations move, edit these fields in `.curation/config.json`: `actRoot`, `h3Root`, `h3FitnessRoot`, and `benchmarkArchive`.
 
-## Add neutral videos later
+## Rebuild the formal study bundle
 
-1. Put candidate files under `public/media/` using neutral names such as `trial_001_a.mp4` and `trial_001_b.mp4`.
-2. In `src/study/manifest.ts`, set the matching `first.src` and `second.src` values to relative public paths.
-3. Keep the real method-to-code mapping only in the private Sheet's `MethodMap` tab.
-4. Confirm the private mapping uses each physical position 15 times per method.
+The ignored `.curation/study-export-config.json` controls the private fixed position assignment. After curation changes, run:
+
+```bash
+pnpm export:study
+```
+
+This regenerates `src/study/manifest-data.json`, copies neutral files to `public/media/`, and writes the private `.curation/method-map.csv` plus a hash receipt. Never commit `.curation/`.
 
 The page uses `object-fit: contain`, so study videos keep their original aspect ratio.
 

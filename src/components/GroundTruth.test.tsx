@@ -1,11 +1,39 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { studyManifest } from '../study/manifest';
+import type { GroundTruthConfig } from '../study/types';
 import '../styles.css';
 import { activeGroundTruthEvents, GroundTruth } from './GroundTruth';
 
 describe('activeGroundTruthEvents', () => {
-  const config = studyManifest.trials[0].groundTruth;
+  const textRegion = { x: 0.07, y: 0.2, width: 0.38, height: 0.42 };
+  const config: GroundTruthConfig = {
+    durationSeconds: 5,
+    canvas: { width: 832, height: 480 },
+    subjectRegion: { x: 0.47, y: 0.16, width: 0.47, height: 0.7 },
+    events: [
+      {
+        id: 'headline',
+        text: 'Primary message',
+        timeStart: 0.3,
+        timeEnd: 3.6,
+        region: textRegion,
+      },
+      {
+        id: 'detail',
+        text: 'Supporting text',
+        timeStart: 1,
+        timeEnd: 3,
+        region: textRegion,
+      },
+      {
+        id: 'cta',
+        text: 'Call to action',
+        timeStart: 3.2,
+        timeEnd: 5,
+        region: { x: 0.07, y: 0.68, width: 0.32, height: 0.13 },
+      },
+    ],
+  };
 
   it('includes an event at its start and excludes it at its end', () => {
     expect(activeGroundTruthEvents(config, 0.3).map(({ id }) => id)).toEqual(['headline']);
@@ -25,6 +53,15 @@ describe('activeGroundTruthEvents', () => {
       whiteSpace: 'nowrap',
       fontSize: '7px',
     });
+  });
+
+  it('stacks simultaneous text events that share one layout region', () => {
+    render(<GroundTruth config={config} time={1.2} />);
+
+    const regions = screen.getAllByTestId('ground-truth-text-region');
+    expect(regions).toHaveLength(1);
+    expect(regions[0]).toHaveTextContent('Primary message');
+    expect(regions[0]).toHaveTextContent('Supporting text');
   });
 
   it('uses the supplied canvas aspect ratio', () => {

@@ -26,7 +26,7 @@ The endpoint validates study version, trial IDs, anonymous answer codes, payload
 
 ## Private method map
 
-Fill `MethodMap` only in the private Sheet. Use one row per anonymous candidate code and keep the production assignment balanced: the first physical position contains each method 15 times across the 30 trials. Do not commit this mapping to GitHub.
+After `setupSheet` creates the tabs, import the locally generated `.curation/method-map.csv` into `MethodMap`. It contains one row per anonymous candidate code and a balanced assignment: the first physical position contains each method 15 times across the 30 trials. Do not commit or publish this mapping.
 
 ## Quick check
 
