@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { GroundTruth } from './components/GroundTruth';
 import { MediaPanel } from './components/MediaPanel';
 import { QuestionCard } from './components/QuestionCard';
@@ -27,21 +34,27 @@ type AppProps = {
 
 type QuestionKey = 'informationChoice' | 'placementChoice' | 'overallChoice';
 
-const questions: Array<{ key: QuestionKey; heading: string; hint: string }> = [
+const questions: Array<{ key: QuestionKey; heading: string; hint: ReactNode }> = [
   {
     key: 'informationChoice',
     heading: 'Which video makes the information easier to read and understand?',
-    hint: 'Is the text correct, clear, and shown at the right time?',
+    hint: (
+      <>Is the text <strong>correct</strong>, <strong>clear</strong>, and shown at the <strong>right time</strong>?</>
+    ),
   },
   {
     key: 'placementChoice',
     heading: 'Which video puts the text in a better place?',
-    hint: 'Is the text where it should be, without covering the main subject?',
+    hint: (
+      <>Is the text <strong>where it should be</strong>, without <strong>covering the main subject</strong>?</>
+    ),
   },
   {
     key: 'overallChoice',
     heading: 'Which video looks better overall?',
-    hint: 'Think about both the scene and the text.',
+    hint: (
+      <>Think about both <strong>the scene</strong> and <strong>the text</strong>.</>
+    ),
   },
 ];
 

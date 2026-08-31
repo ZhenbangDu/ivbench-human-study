@@ -300,6 +300,22 @@ describe('App', () => {
     expect(screen.getByText('Which video looks better overall?')).toBeInTheDocument();
   });
 
+  it('emphasizes the key criteria inside each question hint', async () => {
+    await startStudy();
+
+    for (const criterion of [
+      'correct',
+      'clear',
+      'right time',
+      'where it should be',
+      'covering the main subject',
+      'the scene',
+      'the text',
+    ]) {
+      expect(screen.getByText(criterion, { selector: 'strong' })).toBeInTheDocument();
+    }
+  });
+
   it('clears local study progress and returns to the welcome screen after confirmation', async () => {
     const storage = new MemoryStorage();
     const user = userEvent.setup();

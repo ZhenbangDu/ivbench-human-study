@@ -113,6 +113,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .question-card { display: flex; flex-direction: column; margin: 0; min-width: 0; border: 1px solid #d9dee7; border-radius: 12px; padding: 16px 16px 14px; background: #fff; box-shadow: 0 5px 16px rgba(26, 38, 57, .035); }
 .question-card h2 { width: 100%; margin: 0; padding: 0; color: #16202d; font-size: clamp(17px, 1.12vw, 20px); line-height: 1.3; font-weight: 800; }
 .question-card p { min-height: 39px; margin: 8px 0 14px; color: #667181; font-size: clamp(14px, 0.92vw, 16px); line-height: 1.35; }
+.question-card p strong { color: #344154; font-weight: 800; }
 .choice-row { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 8px; margin-top: auto; }
 .choice-button { min-height: 45px; border: 1px solid transparent; border-radius: 8px; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; transition: box-shadow .12s ease, transform .12s ease, filter .12s ease; }
 .choice-first { background: #3c72d2; }

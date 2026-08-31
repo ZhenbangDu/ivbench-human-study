@@ -1,9 +1,9 @@
-import { useId } from 'react';
+import { useId, type ReactNode } from 'react';
 import type { PhysicalChoice } from '../study/session';
 
 type QuestionCardProps = {
   heading: string;
-  hint: string;
+  hint: ReactNode;
   labels: readonly [string, string, string];
   value: PhysicalChoice | null;
   onChange: (choice: PhysicalChoice) => void;
